@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Accounts - Promissory App</title>
+
   <style>
     * {
       margin: 0;
@@ -101,25 +102,45 @@
 
     .filters {
       display: flex;
-      gap: 10px;
-      margin: 15px 0;
+      gap: 15px;
       flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 20px;
+      padding: 10px 15px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
     }
 
     .filters input,
     .filters select {
-      padding: 10px 12px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+      padding: 10px 16px;
+      font-size: 14px;
+      border: none;
+      border-radius: 50px;
+      background-color: #f1f3f8;
+      color: #333;
+      min-width: 160px;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     }
 
-    .btn {
-      padding: 10px 14px;
+    .filters input:focus,
+    .filters select:focus {
+      outline: none;
+      background-color: #e6ebff;
+      box-shadow: 0 4px 10px rgba(58, 75, 179, 0.2);
+    }
+
+    .btn,
+    .btn-clear {
+      padding: 8px 14px;
+      font-size: 13px;
+      border-radius: 8px;
       border: none;
-      border-radius: 5px;
       cursor: pointer;
-      font-size: 14px;
-      white-space: nowrap;
+      transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     }
 
     .btn-clear {
@@ -128,8 +149,52 @@
     }
 
     .btn-primary {
+      background: #28a745;
+      color: #fff;
+    }
+
+    .btn-add {
       background: #1e2a78;
       color: #fff;
+    }
+
+    .btn-groups {
+      display: flex;
+      gap: 15px;
+      right: 50px;
+    }
+
+    .dropdown {
+      position: relative;
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: white;
+      border-radius: 6px;
+      min-width: 180px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      padding: 6px 0;
+      display: none;
+      z-index: 999;
+    }
+
+    .dropdown-menu a {
+      padding: 10px 14px;
+      display: block;
+      text-decoration: none;
+      color: #333;
+      cursor: pointer;
+    }
+
+    .dropdown-menu a:hover {
+      background: #f2f2f2;
+    }
+
+    .dropdown.show .dropdown-menu {
+      display: block;
     }
 
     .table-container {
@@ -205,24 +270,6 @@
       cursor: not-allowed;
     }
 
-    .hidden {
-      display: none;
-    }
-
-    .sidebar-toggle {
-      display: none;
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      background: #1e2a78;
-      color: #fff;
-      border: none;
-      padding: 10px;
-      border-radius: 5px;
-      cursor: pointer;
-      z-index: 1000;
-    }
-
     #flash-messages {
       position: fixed;
       top: 20px;
@@ -231,7 +278,6 @@
       max-width: 320px;
     }
 
-    /* Flash cards */
     .alert {
       padding: 15px 20px;
       border-radius: 8px;
@@ -243,7 +289,6 @@
       transition: transform 0.3s ease, opacity 0.3s ease;
     }
 
-    /* Types of messages */
     .alert-success {
       background-color: #d4edda;
       color: #155724;
@@ -268,10 +313,23 @@
       border-left: 5px solid #17a2b8;
     }
 
-    /* Slide-in animation when displayed */
     .alert.show {
       opacity: 1;
       transform: translateY(0);
+    }
+
+    .sidebar-toggle {
+      display: none;
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background: #1e2a78;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 1000;
     }
 
     @media (max-width: 768px) {
@@ -286,47 +344,42 @@
       .main-content {
         margin-left: 0;
       }
-
-      .filters {
-        flex-direction: column;
-      }
-
-      .filters>div {
-        width: 100%;
-        justify-content: space-between;
-      }
-
-
     }
   </style>
 </head>
 
 <body>
+
   <button class="sidebar-toggle" onclick="toggleSidebar()">☰ Menu</button>
 
   <nav class="sidebar" id="sidebar">
     <h2>School Admin<br>Promissory Notes</h2>
 
-    <a href="{{ url_for('admin.dashboard') }}" class="{% if request.endpoint == 'admin.dashboard' %}active{% endif %}">
-      <img src="{{ url_for('static', filename='images/dashboard.png') }}" class="icon" alt="Dashboard Icon"> Dashboard
+    <a href="{{ url_for('admin.dashboard') }}"
+      class="{% if request.endpoint == 'admin.dashboard' %}active{% endif %}">
+      <img src="{{ url_for('static', filename='images/dashboard.png') }}" class="icon"> Dashboard
     </a>
 
-    <a href="{{ url_for('admin.accounts') }}" class="{% if request.endpoint == 'admin.accounts' %}active{% endif %}">
-      <img src="{{ url_for('static', filename='images/accounts.png') }}" class="icon" alt="Accounts Icon"> Accounts
+    <a href="{{ url_for('admin.accounts') }}"
+      class="{% if request.endpoint == 'admin.accounts' %}active{% endif %}">
+      <img src="{{ url_for('static', filename='images/accounts.png') }}" class="icon"> Accounts
     </a>
 
-    <a href="{{ url_for('admin.semester') }}" class="{% if request.endpoint == 'admin.semester' %}active{% endif %}">
-      <img src="{{ url_for('static', filename='images/semester.png') }}" class="icon" alt="Semester Icon"> Semester
+    <a href="{{ url_for('admin.semester') }}"
+      class="{% if request.endpoint == 'admin.semester' %}active{% endif %}">
+      <img src="{{ url_for('static', filename='images/semester.png') }}" class="icon"> Semester
     </a>
 
     <a href="{{ url_for('admin.school_year') }}"
       class="{% if request.endpoint == 'admin.school_year' %}active{% endif %}">
-      <img src="{{ url_for('static', filename='images/schoolyear.png') }}" class="icon" alt="School Year Icon"> School
-      Year
+      <img src="{{ url_for('static', filename='images/schoolyear.png') }}" class="icon"> School Year
     </a>
-    <a href="{{ url_for('admin.course') }}" class="{% if request.endpoint == 'admin.course' %}active{% endif %}">
+
+    <a href="{{ url_for('admin.course') }}"
+      class="{% if request.endpoint == 'admin.course' %}active{% endif %}">
       <img src="{{ url_for('static', filename='images/course.png') }}" class="icon"> Active Course
     </a>
+
     <a href="{{ url_for('admin.logout') }}" class="logout-btn">
       <img src="{{ url_for('static', filename='images/logout.png') }}" class="icon"> Logout
     </a>
@@ -338,9 +391,7 @@
       {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
       {% for category, message in messages %}
-      <div class="alert alert-{{ category }}">
-        {{ message }}
-      </div>
+      <div class="alert alert-{{ category }}">{{ message }}</div>
       {% endfor %}
       {% endif %}
       {% endwith %}
@@ -348,14 +399,12 @@
 
     <header class="header">
       <h2>Accounts</h2>
-
       <div class="header-info">
         Semester: <strong>{{ active_semester }}</strong><br>
         S.Y: <strong>{{ active_school_year }}</strong>
       </div>
     </header>
 
-    <!-- Filters Form -->
     <form method="get" class="filters">
       <div style="display:flex; flex-wrap:wrap; gap:10px; flex:1;">
         <input type="text" name="search" placeholder="Search" value="{{ search }}">
@@ -375,38 +424,40 @@
         <button type="button" class="btn btn-clear" onclick="clearFilters()">Clear</button>
       </div>
 
-      <div style="margin-left:auto; display:flex; gap:10px; flex-wrap:wrap;">
-        <button type="button" class="btn btn-primary" onclick="location.href='{{ url_for('admin.add_new_account') }}'">
+      <div style="margin-left:auto; display:flex; gap:10px; flex-wrap:wrap; position:absolute; right:100px;">
+        <button type="button" class="btn btn-primary"
+          onclick="location.href='{{ url_for('admin.add_new_account') }}'">
           + Add New
         </button>
 
-        <button type="button" class="btn btn-primary" onclick="document.getElementById('uploadFile').click()">
-          Import Accounts
-        </button>
+        <div class="btn-groups">
 
-        <button type="button" class="btn btn-primary"
-          onclick="location.href='{{ url_for('admin.download_template') }}'">
-          Download Template
-        </button>
+          <div class="dropdown">
+            <button type="button" class="btn btn-add" onclick="toggleDropdown(this)">Import / Template ▾</button>
+            <div class="dropdown-menu">
+              <a onclick="triggerUpload()">Import Accounts</a>
+              <a href="{{ url_for('admin.download_template') }}">Download Template</a>
+            </div>
+          </div>
 
-        <button type="button" class="btn btn-primary" onclick="location.href='{{ url_for('admin.export_csv') }}'">
-          Export CSV
-        </button>
+          <div class="dropdown">
+            <button type="button" class="btn btn-add" onclick="toggleDropdown(this)">Export ▾</button>
+            <div class="dropdown-menu">
+              <a href="{{ url_for('admin.export_csv') }}">Export CSV</a>
+              <a href="{{ url_for('admin.export_excel') }}">Export Excel</a>
+            </div>
+          </div>
 
-        <button type="button" class="btn btn-primary" onclick="location.href='{{ url_for('admin.export_excel') }}'">
-          Export Excel
-        </button>
+        </div>
+
       </div>
     </form>
 
-    <!-- Upload Form (separate, hidden) -->
-    <form id="uploadForm" action="{{ url_for('admin.upload_accounts') }}" method="POST" enctype="multipart/form-data"
-      style="display:none;">
-      <input type="file" name="file" id="uploadFile" accept=".csv,.xlsx,.xls"
+    <form id="uploadForm" action="{{ url_for('admin.upload_accounts') }}" method="POST"
+      enctype="multipart/form-data" style="display:none;">
+      <input type="file" name="file" id="fileInput" accept=".csv,.xlsx,.xls"
         onchange="document.getElementById('uploadForm').submit();">
     </form>
-
-
 
     <div class="table-container">
       <table>
@@ -431,9 +482,6 @@
             <td>{{ acc.status }}</td>
             <td>
               <a href="{{ url_for('admin.edit_account', account_id=acc.id) }}" class="btn btn-edit">Edit</a>
-              <form action="{{ url_for('admin.delete_account', account_id=acc.id) }}" method="POST"
-                style="display:inline;" onsubmit="return confirm('Delete {{ acc.full_name }}?');">
-              </form>
             </td>
           </tr>
           {% else %}
@@ -519,31 +567,30 @@
       location.href = "{{ url_for('admin.accounts') }}";
     }
 
-    const filterForm = document.querySelector('.filters');
-    const filterInputs = filterForm.querySelectorAll('select, input[name="search"]');
+    function triggerUpload() {
+      document.getElementById('fileInput').click();
+    }
 
-    filterInputs.forEach(el => {
-      if (el.tagName === 'SELECT') {
-        el.addEventListener('change', () => filterForm.submit());
-      } else if (el.type === 'text') {
-        let typingTimer;
-        el.addEventListener('input', () => {
-          clearTimeout(typingTimer);
-          typingTimer = setTimeout(() => filterForm.submit(), 500);
-        });
+    function toggleDropdown(btn) {
+      document.querySelectorAll('.dropdown').forEach(d => {
+        if (d !== btn.parentElement) d.classList.remove('show');
+      });
+      btn.parentElement.classList.toggle('show');
+    }
+
+    document.addEventListener("click", function (e) {
+      if (!e.target.closest(".dropdown")) {
+        document.querySelectorAll(".dropdown").forEach(d => d.classList.remove("show"));
       }
     });
 
     document.addEventListener("DOMContentLoaded", () => {
       const alerts = document.querySelectorAll('.alert');
       alerts.forEach(alert => {
-        // Trigger slide-in
         setTimeout(() => alert.classList.add('show'), 50);
-
-        // Auto-hide after 5 seconds
         setTimeout(() => {
           alert.classList.remove('show');
-          setTimeout(() => alert.remove(), 300); // remove after transition
+          setTimeout(() => alert.remove(), 300);
         }, 5000);
       });
     });

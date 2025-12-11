@@ -10,16 +10,16 @@ fake = Faker()
 
 # Courses
 courses = [
-    "Bachelor of Science in Accountancy",
-    "Bachelor of Science in Management Accounting",
-    "Bachelor of Science in Nursing",
-    "Bachelor of Science in Hospitality Management",
-    "Bachelor of Science in Criminology",
-    "Bachelor of Science in Information Technology",
-    "Bachelor of Science in Computer Science",
-    "Bachelor of Arts in Communication",
-    "Bachelor of Arts in Psychology",
-    "Bachelor of Science in Civil Engineering"
+    'BACHELOR OF SCIENCE IN ACCOUNTANCY',
+    'BACHELOR OF SCIENCE IN MANAGEMENT ACCOUNTING',
+    'BACHELOR OF SCIENCE IN NURSING',
+    'BACHELOR OF SCIENCE IN HOSPITALITY MANAGEMENT',
+    'BACHELOR OF SCIENCE IN CRIMINOLOGY',
+    'BACHELOR OF SCIENCE IN INFORMATION TECHNOLOGY',
+    'BACHELOR OF SCIENCE IN COMPUTER SCIENCE',
+    'BACHELOR OF ARTS IN COMMUNICATION',
+    'BACHELOR OF ARTS IN PSYCHOLOGY',
+    'BACHELOR OF SCIENCE IN CIVIL ENGINEERING'
 ]
 
 # Year-level distribution weights
