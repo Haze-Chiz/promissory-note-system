@@ -422,7 +422,7 @@ def export_csv():
         "Status": a.status,
         "Year_Level": getattr(a, "year_level", ""),
         "Course": getattr(a, "course", ""),
-        "Password": "N/A"  # Do not expose plain passwords
+        "Password": getattr(a, 'plain_password', 'N/A')
     } for a in accounts]
 
     df = pd.DataFrame(data)
