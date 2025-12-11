@@ -250,31 +250,60 @@
       color: #39549b;
     }
 
-    .sidebar-toggle {
-      display: none;
+    #flash-messages {
       position: fixed;
-      top: 10px;
-      left: 10px;
-      background: #1e2a78;
-      color: #fff;
-      border: none;
-      padding: 10px;
-      border-radius: 5px;
-      cursor: pointer;
-      z-index: 1000;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      max-width: 320px;
     }
 
-    @media (max-width: 768px) {
-      .sidebar-toggle {
-        display: block;
-      }
+    /* Flash cards */
+    .alert {
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      font-weight: 500;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    /* Types of messages */
+    .alert-success {
+      background-color: #d4edda;
+      color: #155724;
+      border-left: 5px solid #28a745;
+    }
+
+    .alert-danger {
+      background-color: #f8d7da;
+      color: #721c24;
+      border-left: 5px solid #dc3545;
+    }
+
+    .alert-warning {
+      background-color: #fff3cd;
+      color: #856404;
+      border-left: 5px solid #ffc107;
+    }
+
+    .alert-info {
+      background-color: #d1ecf1;
+      color: #0c5460;
+      border-left: 5px solid #17a2b8;
+    }
+
+    /* Slide-in animation when displayed */
+    .alert.show {
+      opacity: 1;
+      transform: translateY(0);
     }
   </style>
 </head>
 
 <body>
-
-  <button class="sidebar-toggle" onclick="toggleSidebar()">☰ Menu</button>
 
   <nav class="sidebar" id="sidebar">
     <h2>School Admin<br>Promissory Notes</h2>
@@ -308,6 +337,18 @@
   </nav>
 
   <main class="main-content">
+
+    <div id="flash-messages">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">
+        {{ message }}
+      </div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+    </div>
 
     <div class="container">
 
@@ -362,6 +403,19 @@
     function submitForm() {
       form.submit();
     }
+    document.addEventListener("DOMContentLoaded", () => {
+      const alerts = document.querySelectorAll('.alert');
+      alerts.forEach(alert => {
+        // Trigger slide-in
+        setTimeout(() => alert.classList.add('show'), 50);
+
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+          alert.classList.remove('show');
+          setTimeout(() => alert.remove(), 300); // remove after transition
+        }, 5000);
+      });
+    });
   </script>
 
 </body>

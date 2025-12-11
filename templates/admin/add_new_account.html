@@ -265,11 +265,17 @@
   <main class="main-content">
     <header class="header">
       <h2>{% if account %}Edit{% else %}Add New{% endif %} Account</h2>
-      <div><strong>{{ admin_user }}</strong> ⚫</div>
+      <div><strong>{{ admin_user }}</strong></div>
     </header>
 
     <section class="card">
-      <button type="button" onclick="window.history.back()" class="btn btn-back">← Back</button>
+      <button type="button" onclick="window.history.back()" class="btn btn-back">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"
+          style="margin-right:6px; vertical-align:middle;">
+          <path fill-rule="evenodd"
+            d="M15 8a.5.5 0 0 1-.5.5H2.707l4.147 4.146a.5.5 0 0 1-.708.708l-5-5a.5.5 0 0 1 0-.708l5-5a.5.5 0 0 1 .708.708L2.707 7.5H14.5A.5.5 0 0 1 15 8z" />
+        </svg>
+      </button>
 
       <h3>{% if account %}Edit{% else %}Add New{% endif %} Account</h3>
       <form method="POST" action="">

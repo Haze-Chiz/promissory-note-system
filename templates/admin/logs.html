@@ -134,8 +134,7 @@
         td {
             border-bottom: 1px solid #eee;
             text-align: left;
-            padding: 12px;
-            font-size: 14px;
+            padding: 12px 15px;
         }
 
         tbody tr:nth-child(even) {
@@ -149,27 +148,34 @@
 
         .filters {
             display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 15px;
             flex-wrap: wrap;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
         }
 
         .filters input,
         .filters select {
-            padding: 10px 12px;
-            border-radius: 50px;
+            padding: 10px 16px;
+            font-size: 14px;
             border: none;
+            border-radius: 50px;
             background-color: #f1f3f8;
+            color: #333;
             min-width: 160px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
         }
 
-        .filters button {
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: none;
-            background-color: #1e2a78;
-            color: #fff;
-            cursor: pointer;
+        .filters input:focus,
+        .filters select:focus {
+            outline: none;
+            background-color: #e6ebff;
+            box-shadow: 0 4px 10px rgba(58, 75, 179, 0.2);
         }
 
         .sidebar-toggle {
@@ -184,6 +190,65 @@
             border-radius: 5px;
             cursor: pointer;
             z-index: 1000;
+        }
+
+        .btn,
+        .btn-clear {
+            padding: 8px 14px;
+            font-size: 13px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-clear {
+            background-color: #6c757d;
+            color: #fff;
+        }
+
+        .pagination-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .pagination-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .pagination {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .pagination button {
+            background: #fff;
+            border: 1px solid #ccc;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .pagination button.active {
+            background: #1e2a78;
+            color: #fff;
+            border-color: #1e2a78;
+        }
+
+        .pagination button:disabled {
+            opacity: .5;
+            cursor: not-allowed;
         }
 
         @media (max-width: 768px) {
@@ -255,27 +320,37 @@
             </div>
         </header>
 
-        <form class="filters" method="get">
-            <input type="text" name="user" placeholder="Search by user" value="{{ request.args.get('user', '') }}">
-            <input type="text" name="action" placeholder="Search by action"
-                value="{{ request.args.get('action', '') }}">
-            <button type="submit">Filter</button>
+        <form class="filters" method="get" style="align-items:center;">
+            <input type="text" name="user" placeholder="Search by user" value="{{ request.args.get('user', '') }}" autocomplete="off">
+
+            <select name="action" onchange="this.form.submit()">
+                <option value="">All Actions</option>
+                {% set actions = ['Logged in', 'Logged out', 'Add', 'Edit', 'Delete', 'Changed', 'Upload',
+                'Export', 'View'] %}
+                {% for act in actions %}
+                <option value="{{ act }}" {% if request.args.get('action')==act %}selected{% endif %}>{{ act }}</option>
+                {% endfor %}
+            </select>
+
+            <button type="button" class="btn btn-clear"
+                onclick="location.href='{{ url_for('admin.logs') }}'">Clear</button>
         </form>
+
 
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>User</th>
-                        <th>Action</th>
-                        <th>Timestamp</th>
+                        <th style="width:20px">#</th>
+                        <th style="width:100px">User</th>
+                        <th style="width:200px">Action</th>
+                        <th style="width:50px">Timestamp</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for log in logs %}
+                    {% for log in logs.items %}
                     <tr>
-                        <td>{{ loop.index }}</td>
+                        <td>{{ (logs.page - 1) * logs.per_page + loop.index }}</td>
                         <td>{{ log.user_name or 'System' }}</td>
                         <td>{{ log.action }}</td>
                         <td>{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
@@ -288,6 +363,73 @@
                 </tbody>
             </table>
         </div>
+
+        <div class="pagination-container">
+            <div class="results-info">
+                Page {{ logs.page }} of {{ logs.pages }}
+            </div>
+
+            <div class="pagination">
+                <a
+                    href="{{ url_for('admin.logs', page=logs.prev_num, user=request.args.get('user'), action=request.args.get('action')) }}">
+                    <button {% if not logs.has_prev %}disabled{% endif %}>Previous</button>
+                </a>
+
+                {% set current = logs.page %}
+                {% set total = logs.pages %}
+
+                {% if total <= 7 %} {% for p in range(1, total + 1) %} <a
+                    href="{{ url_for('admin.logs', page=p, user=request.args.get('user'), action=request.args.get('action')) }}">
+                    <button class="{% if p == current %}active{% endif %}">{{ p }}</button>
+                    </a>
+                    {% endfor %}
+                    {% else %}
+                    {% for p in range(1, 4) %}
+                    <a
+                        href="{{ url_for('admin.logs', page=p, user=request.args.get('user'), action=request.args.get('action')) }}">
+                        <button class="{% if p == current %}active{% endif %}">{{ p }}</button>
+                    </a>
+                    {% endfor %}
+
+                    {% if current > 4 and current < total - 3 %} <button disabled>...</button>
+                        {% for p in range(current-1, current+2) %}
+                        <a
+                            href="{{ url_for('admin.logs', page=p, user=request.args.get('user'), action=request.args.get('action')) }}">
+                            <button class="{% if p == current %}active{% endif %}">{{ p }}</button>
+                        </a>
+                        {% endfor %}
+                        <button disabled>...</button>
+                        {% elif current <= 4 %} {% for p in range(4, 6) %} <a
+                            href="{{ url_for('admin.logs', page=p, user=request.args.get('user'), action=request.args.get('action')) }}">
+                            <button class="{% if p == current %}active{% endif %}">{{ p }}</button>
+                            </a>
+                            {% endfor %}
+                            <button disabled>...</button>
+                            {% else %}
+                            <button disabled>...</button>
+                            {% for p in range(total-5, total-2) %}
+                            <a
+                                href="{{ url_for('admin.logs', page=p, user=request.args.get('user'), action=request.args.get('action')) }}">
+                                <button class="{% if p == current %}active{% endif %}">{{ p }}</button>
+                            </a>
+                            {% endfor %}
+                            {% endif %}
+
+                            {% for p in range(total-2, total + 1) %}
+                            <a
+                                href="{{ url_for('admin.logs', page=p, user=request.args.get('user'), action=request.args.get('action')) }}">
+                                <button class="{% if p == current %}active{% endif %}">{{ p }}</button>
+                            </a>
+                            {% endfor %}
+                            {% endif %}
+
+                            <a
+                                href="{{ url_for('admin.logs', page=logs.next_num, user=request.args.get('user'), action=request.args.get('action')) }}">
+                                <button {% if not logs.has_next %}disabled{% endif %}>Next</button>
+                            </a>
+            </div>
+        </div>
+
     </main>
 
     <script>

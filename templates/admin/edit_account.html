@@ -372,7 +372,7 @@
   <main class="main-content">
     <header class="header">
       <h2>Edit Account</h2>
-      <div><strong>{{ admin_user }}</strong> ⚫</div>
+      <div><strong>{{ admin_user }}</strong></div>
     </header>
 
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -386,6 +386,15 @@
     {% endwith %}
 
     <section class="form-container">
+      <button type="button" onclick="window.history.back()" class="btn btn-back">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"
+          style="margin-right:6px; vertical-align:middle;">
+          <path fill-rule="evenodd"
+            d="M15 8a.5.5 0 0 1-.5.5H2.707l4.147 4.146a.5.5 0 0 1-.708.708l-5-5a.5.5 0 0 1 0-.708l5-5a.5.5 0 0 1 .708.708L2.707 7.5H14.5A.5.5 0 0 1 15 8z" />
+        </svg>
+        
+      </button>
+
       <h3>Account Details</h3>
 
       <form method="POST">
@@ -470,7 +479,6 @@
           <div class="form-group action-buttons">
             <button type="submit" name="save" class="btn btn-save">Save Changes</button>
             <button type="submit" name="reset_password" class="btn btn-reset">Reset Password</button>
-            <a href="{{ url_for('admin.accounts') }}" class="btn btn-back">Back to Accounts</a>
           </div>
 
         </div>

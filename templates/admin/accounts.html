@@ -180,6 +180,7 @@
     td {
       padding: 12px 15px;
       border-bottom: 1px solid #eee;
+      text-align: left;
     }
 
     tbody tr:nth-child(even) {
@@ -298,36 +299,10 @@
       opacity: 1;
       transform: translateY(0);
     }
-
-    @media (max-width: 768px) {
-      .sidebar {
-        transform: translateX(-100%);
-      }
-
-      .sidebar.open {
-        transform: translateX(0);
-      }
-
-      .main-content {
-        margin-left: 0;
-      }
-
-      .filters {
-        flex-direction: column;
-      }
-
-      .filters>div {
-        width: 100%;
-        justify-content: space-between;
-      }
-
-
-    }
   </style>
 </head>
 
 <body>
-  <button class="sidebar-toggle" onclick="toggleSidebar()">☰ Menu</button>
 
   <nav class="sidebar" id="sidebar">
     <h2>School Admin<br>Promissory Notes</h2>
@@ -386,7 +361,7 @@
     <!-- Filters Form -->
     <form method="get" class="filters">
       <div style="display:flex; flex-wrap:wrap; gap:10px; flex:1;">
-        <input type="text" name="search" placeholder="Search" value="{{ search }}">
+        <input type="text" name="search" placeholder="Search" value="{{ search }}" autocomplete="off">
         <select name="role">
           <option value="" {% if not role_filter %}selected{% endif %}>All Roles</option>
           <option value="Admin" {% if role_filter=='Admin' %}selected{% endif %}>Admin</option>
@@ -439,12 +414,12 @@
       <table>
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Full Name</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Status</th>
-            <th>Actions</th>
+            <th style="width:20px">ID</th>
+            <th style="width:400px">Full Name</th>
+            <th style="width:400px">Email</th>
+            <th style="width:100px">Role</th>
+            <th style="width:100px">Status</th>
+            <th style="width:100px">Actions</th>
           </tr>
         </thead>
 
