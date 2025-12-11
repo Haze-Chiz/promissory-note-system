@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accounts - Promissory App</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f9f9f9;
+    }
+
+    .sidebar {
+      width: 220px;
+      height: 100vh;
+      background: linear-gradient(135deg, #1e2a78, #3a4bb3);
+      color: #fff;
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding-top: 20px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
+    }
+
+    .sidebar h2 {
+      text-align: center;
+      font-size: 16px;
+      margin-bottom: 30px;
+      font-weight: 300;
+    }
+
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: #fff;
+      text-decoration: none;
+      margin: 5px 0;
+      border-radius: 5px;
+    }
+
+    .sidebar a.active {
+      background-color: rgba(255, 255, 255, 0.25);
+      font-weight: 600;
+    }
+
+    .sidebar a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .sidebar img.icon {
+      width: 30px;
+      height: 30px;
+      margin-right: 10px;
+      background: #fff;
+      border-radius: 50%;
+      padding: 6px;
+    }
+
+    .logout-btn {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+    }
+
+    .main-content {
+      margin-left: 220px;
+      padding: 20px;
+      min-height: 100vh;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #fff;
+      padding: 15px 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+
+    .header-info {
+      text-align: right;
+      font-size: 14px;
+      color: #444;
+      line-height: 1.3;
+    }
+
+    .filters {
+      display: flex;
+      gap: 10px;
+      margin: 15px 0;
+      flex-wrap: wrap;
+    }
+
+    .filters input,
+    .filters select {
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .btn {
+      padding: 10px 14px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .btn-clear {
+      background-color: #6c757d;
+      color: #fff;
+    }
+
+    .btn-primary {
+      background: #1e2a78;
+      color: #fff;
+    }
+
+    .table-container {
+      overflow-x: auto;
+      width: 100%;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    thead {
+      background: linear-gradient(135deg, #1e2a78, #3a4bb3);
+      color: #fff;
+    }
+
+    th,
+    td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #eee;
+    }
+
+    tbody tr:nth-child(even) {
+      background: #f8f9fa;
+    }
+
+    .btn-edit {
+      background: #28a745;
+      color: #fff;
+    }
+
+    .btn-delete {
+      background: #dc3545;
+      color: #fff;
+    }
+
+    .pagination-container {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .pagination {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pagination button {
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .pagination button.active {
+      background: #1e2a78;
+      color: #fff;
+      border-color: #1e2a78;
+    }
+
+    .pagination button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .sidebar-toggle {
+      display: none;
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background: #1e2a78;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 1000;
+    }
+
+    #flash-messages {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 9999;
+      max-width: 320px;
+    }
+
+    /* Flash cards */
+    .alert {
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      font-weight: 500;
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    /* Types of messages */
+    .alert-success {
+      background-color: #d4edda;
+      color: #155724;
+      border-left: 5px solid #28a745;
+    }
+
+    .alert-danger {
+      background-color: #f8d7da;
+      color: #721c24;
+      border-left: 5px solid #dc3545;
+    }
+
+    .alert-warning {
+      background-color: #fff3cd;
+      color: #856404;
+      border-left: 5px solid #ffc107;
+    }
+
+    .alert-info {
+      background-color: #d1ecf1;
+      color: #0c5460;
+      border-left: 5px solid #17a2b8;
+    }
+
+    /* Slide-in animation when displayed */
+    .alert.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .filters {
+        flex-direction: column;
+      }
+
+      .filters>div {
+        width: 100%;
+        justify-content: space-between;
+      }
+
+
+    }
+  </style>
+</head>
+
+<body>
+  <button class="sidebar-toggle" onclick="toggleSidebar()">☰ Menu</button>
+
+  <nav class="sidebar" id="sidebar">
+    <h2>School Admin<br>Promissory Notes</h2>
+
+    <a href="{{ url_for('admin.dashboard') }}" class="{% if request.endpoint == 'admin.dashboard' %}active{% endif %}">
+      <img src="{{ url_for('static', filename='images/dashboard.png') }}" class="icon" alt="Dashboard Icon"> Dashboard
+    </a>
+
+    <a href="{{ url_for('admin.accounts') }}" class="{% if request.endpoint == 'admin.accounts' %}active{% endif %}">
+      <img src="{{ url_for('static', filename='images/accounts.png') }}" class="icon" alt="Accounts Icon"> Accounts
+    </a>
+
+    <a href="{{ url_for('admin.semester') }}" class="{% if request.endpoint == 'admin.semester' %}active{% endif %}">
+      <img src="{{ url_for('static', filename='images/semester.png') }}" class="icon" alt="Semester Icon"> Semester
+    </a>
+
+    <a href="{{ url_for('admin.school_year') }}"
+      class="{% if request.endpoint == 'admin.school_year' %}active{% endif %}">
+      <img src="{{ url_for('static', filename='images/schoolyear.png') }}" class="icon" alt="School Year Icon"> School
+      Year
+    </a>
+    <a href="{{ url_for('admin.course') }}" class="{% if request.endpoint == 'admin.course' %}active{% endif %}">
+      <img src="{{ url_for('static', filename='images/course.png') }}" class="icon"> Active Course
+    </a>
+    <a href="{{ url_for('admin.logout') }}" class="logout-btn">
+      <img src="{{ url_for('static', filename='images/logout.png') }}" class="icon"> Logout
+    </a>
+  </nav>
+
+  <main class="main-content">
+
+    <div id="flash-messages">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">
+        {{ message }}
+      </div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+    </div>
+
+    <header class="header">
+      <h2>Accounts</h2>
+
+      <div class="header-info">
+        Semester: <strong>{{ active_semester }}</strong><br>
+        S.Y: <strong>{{ active_school_year }}</strong>
+      </div>
+    </header>
+
+    <!-- Filters Form -->
+    <form method="get" class="filters">
+      <div style="display:flex; flex-wrap:wrap; gap:10px; flex:1;">
+        <input type="text" name="search" placeholder="Search" value="{{ search }}">
+        <select name="role">
+          <option value="" {% if not role_filter %}selected{% endif %}>All Roles</option>
+          <option value="Admin" {% if role_filter=='Admin' %}selected{% endif %}>Admin</option>
+          <option value="Student" {% if role_filter=='Student' %}selected{% endif %}>Student</option>
+          <option value="Finance" {% if role_filter=='Finance' %}selected{% endif %}>Finance</option>
+        </select>
+
+        <select name="status">
+          <option value="" {% if not status_filter %}selected{% endif %}>All Status</option>
+          <option value="Active" {% if status_filter=='Active' %}selected{% endif %}>Active</option>
+          <option value="Inactive" {% if status_filter=='Inactive' %}selected{% endif %}>Inactive</option>
+        </select>
+
+        <button type="button" class="btn btn-clear" onclick="clearFilters()">Clear</button>
+      </div>
+
+      <div style="margin-left:auto; display:flex; gap:10px; flex-wrap:wrap;">
+        <button type="button" class="btn btn-primary" onclick="location.href='{{ url_for('admin.add_new_account') }}'">
+          + Add New
+        </button>
+
+        <button type="button" class="btn btn-primary" onclick="document.getElementById('uploadFile').click()">
+          Import Accounts
+        </button>
+
+        <button type="button" class="btn btn-primary"
+          onclick="location.href='{{ url_for('admin.download_template') }}'">
+          Download Template
+        </button>
+
+        <button type="button" class="btn btn-primary" onclick="location.href='{{ url_for('admin.export_csv') }}'">
+          Export CSV
+        </button>
+
+        <button type="button" class="btn btn-primary" onclick="location.href='{{ url_for('admin.export_excel') }}'">
+          Export Excel
+        </button>
+      </div>
+    </form>
+
+    <!-- Upload Form (separate, hidden) -->
+    <form id="uploadForm" action="{{ url_for('admin.upload_accounts') }}" method="POST" enctype="multipart/form-data"
+      style="display:none;">
+      <input type="file" name="file" id="uploadFile" accept=".csv,.xlsx,.xls"
+        onchange="document.getElementById('uploadForm').submit();">
+    </form>
+
+
+
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for acc in accounts %}
+          <tr>
+            <td>{{ (pagination.page - 1) * pagination.per_page + loop.index }}</td>
+            <td>{{ acc.full_name }}</td>
+            <td>{{ acc.email }}</td>
+            <td>{{ acc.role }}</td>
+            <td>{{ acc.status }}</td>
+            <td>
+              <a href="{{ url_for('admin.edit_account', account_id=acc.id) }}" class="btn btn-edit">Edit</a>
+              <form action="{{ url_for('admin.delete_account', account_id=acc.id) }}" method="POST"
+                style="display:inline;" onsubmit="return confirm('Delete {{ acc.full_name }}?');">
+              </form>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="6" style="text-align:center;">No accounts found.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <div class="pagination-container">
+      <div class="results-info">
+        Page {{ pagination.page }} of {{ total_pages }}
+      </div>
+
+      <div class="pagination">
+        <a
+          href="{{ url_for('admin.accounts', page=pagination.prev_num, search=search, role=role_filter, status=status_filter) }}">
+          <button {% if not pagination.has_prev %}disabled{% endif %}>Previous</button>
+        </a>
+
+        {% set current = pagination.page %}
+        {% set total = total_pages %}
+
+        {% if total <= 7 %} {% for p in range(1, total + 1) %} <a
+          href="{{ url_for('admin.accounts', page=p, search=search, role=role_filter, status=status_filter) }}">
+          <button class="{% if p == current %}active{% endif %}">{{ p }}</button>
+          </a>
+          {% endfor %}
+          {% else %}
+          {% for p in range(1, 4) %}
+          <a href="{{ url_for('admin.accounts', page=p, search=search, role=role_filter, status=status_filter) }}">
+            <button class="{% if p == current %}active{% endif %}">{{ p }}</button>
+          </a>
+          {% endfor %}
+
+          {% if current > 4 and current < total - 3 %} <button disabled>...</button>
+            {% for p in range(current-1, current+2) %}
+            <a href="{{ url_for('admin.accounts', page=p, search=search, role=role_filter, status=status_filter) }}">
+              <button class="{% if p == current %}active{% endif %}">{{ p }}</button>
+            </a>
+            {% endfor %}
+            <button disabled>...</button>
+            {% elif current <= 4 %} {% for p in range(4, 6) %} <a
+              href="{{ url_for('admin.accounts', page=p, search=search, role=role_filter, status=status_filter) }}">
+              <button class="{% if p == current %}active{% endif %}">{{ p }}</button>
+              </a>
+              {% endfor %}
+              <button disabled>...</button>
+              {% else %}
+              <button disabled>...</button>
+              {% for p in range(total-5, total-2) %}
+              <a href="{{ url_for('admin.accounts', page=p, search=search, role=role_filter, status=status_filter) }}">
+                <button class="{% if p == current %}active{% endif %}">{{ p }}</button>
+              </a>
+              {% endfor %}
+              {% endif %}
+
+              {% for p in range(total-2, total + 1) %}
+              <a href="{{ url_for('admin.accounts', page=p, search=search, role=role_filter, status=status_filter) }}">
+                <button class="{% if p == current %}active{% endif %}">{{ p }}</button>
+              </a>
+              {% endfor %}
+              {% endif %}
+
+              <a
+                href="{{ url_for('admin.accounts', page=pagination.next_num, search=search, role=role_filter, status=status_filter) }}">
+                <button {% if not pagination.has_next %}disabled{% endif %}>Next</button>
+              </a>
+      </div>
+    </div>
+
+
+  </main>
+
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+    }
+
+    function clearFilters() {
+      location.href = "{{ url_for('admin.accounts') }}";
+    }
+
+    const filterForm = document.querySelector('.filters');
+    const filterInputs = filterForm.querySelectorAll('select, input[name="search"]');
+
+    filterInputs.forEach(el => {
+      if (el.tagName === 'SELECT') {
+        el.addEventListener('change', () => filterForm.submit());
+      } else if (el.type === 'text') {
+        let typingTimer;
+        el.addEventListener('input', () => {
+          clearTimeout(typingTimer);
+          typingTimer = setTimeout(() => filterForm.submit(), 500);
+        });
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const alerts = document.querySelectorAll('.alert');
+      alerts.forEach(alert => {
+        // Trigger slide-in
+        setTimeout(() => alert.classList.add('show'), 50);
+
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+          alert.classList.remove('show');
+          setTimeout(() => alert.remove(), 300); // remove after transition
+        }, 5000);
+      });
+    });
+  </script>
+
+</body>
+
+</html>

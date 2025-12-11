@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Activate School Year - Admin</title>
+
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background-color: #f9f9f9;
+    }
+
+  .sidebar {
+    width: 220px;
+    height: 100vh;
+    background: linear-gradient(135deg, #1e2a78, #3a4bb3);
+    color: #fff;
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+  }
+
+  .sidebar h2 {
+    text-align: center;
+    font-size: 16px;
+    margin: 0 10px 30px;
+    font-weight: 300;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .sidebar a {
+    display: flex;
+    align-items: center;
+    padding: 12px 20px;
+    color: #fff;
+    text-decoration: none;
+    margin: 5px 0;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+
+      .sidebar a.active { background-color: rgba(255, 255, 255, 0.25); font-weight: 600; }
+
+  .sidebar a:hover {
+    background-color: rgba(255,255,255,0.1);
+  }
+
+  .sidebar img.icon {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+    background: #fff;
+    border-radius: 50%;
+    padding: 6px;
+  }
+
+  .logout-btn {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 12px 20px;
+  }
+
+  .main-content {
+    margin-left: 220px;
+    padding: 30px;
+    min-height: 100vh;
+  }
+
+  .sidebar-toggle {
+    display: none;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: #1e2a78;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 1000;
+  }
+
+  @media (max-width: 768px) {
+    .sidebar {
+      transform: translateX(-100%);
+    }
+
+    .sidebar.open {
+      transform: translateX(0);
+    }
+
+    .main-content {
+      margin-left: 0;
+    }
+
+    .sidebar-toggle {
+      display: block;
+    }
+  }
+
+  .container {
+    max-width: 600px;
+    margin: 50px auto;
+    background: #fff;
+    padding: 35px 30px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    text-align: center;
+  }
+
+  h1 {
+    font-size: 26px;
+    color: #1e2a78;
+    margin-bottom: 30px;
+    font-weight: 600;
+  }
+
+  label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 500;
+    font-size: 15px;
+    text-align: left;
+  }
+
+  input {
+    width: 100%;
+    padding: 14px 12px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  input:focus {
+    border-color: #4b6cb7;
+    box-shadow: 0 0 5px rgba(75,108,183,0.3);
+    outline: none;
+  }
+
+  .btn {
+    margin-top: 25px;
+    padding: 14px 22px;
+    background: #4b6cb7;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    transition: background 0.3s ease, transform 0.2s ease;
+  }
+
+  .btn:hover {
+    background: #39549b;
+    transform: translateY(-1px);
+  }
+
+  .info-box {
+    background: #eef3ff;
+    padding: 20px;
+    border-left: 5px solid #4b6cb7;
+    margin-top: 30px;
+    border-radius: 8px;
+    text-align: left;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  a.back {
+    display: inline-block;
+    margin-bottom: 20px;
+    text-decoration: none;
+    color: #4b6cb7;
+    font-size: 14px;
+    transition: color 0.2s ease;
+  }
+
+  a.back:hover {
+    text-decoration: underline;
+    color: #39549b;
+  }
+
+  .sidebar-toggle {
+    display: none;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: #1e2a78;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 1000;
+  }
+
+  @media (max-width: 768px) {
+    .sidebar-toggle { display: block; }
+  }
+</style>
+</head>
+
+<body>
+
+<button class="sidebar-toggle" onclick="toggleSidebar()">☰ Menu</button>
+
+<nav class="sidebar" id="sidebar">
+  <h2>School Admin<br>Promissory Notes</h2>
+
+  <a href="{{ url_for('admin.dashboard') }}" class="{% if request.endpoint == 'admin.dashboard' %}active{% endif %}">
+    <img src="{{ url_for('static', filename='images/dashboard.png') }}" class="icon" alt="Dashboard Icon"> Dashboard
+  </a>
+
+  <a href="{{ url_for('admin.accounts') }}" class="{% if request.endpoint == 'admin.accounts' %}active{% endif %}">
+    <img src="{{ url_for('static', filename='images/accounts.png') }}" class="icon" alt="Accounts Icon"> Accounts
+  </a>
+
+  <a href="{{ url_for('admin.semester') }}" class="{% if request.endpoint == 'admin.semester' %}active{% endif %}">
+    <img src="{{ url_for('static', filename='images/semester.png') }}" class="icon" alt="Semester Icon"> Semester
+  </a>
+
+  <a href="{{ url_for('admin.school_year') }}" class="{% if request.endpoint == 'admin.school_year' %}active{% endif %}">
+    <img src="{{ url_for('static', filename='images/schoolyear.png') }}" class="icon" alt="School Year Icon"> School Year
+  </a>
+    <a href="{{ url_for('admin.course') }}" class="{% if request.endpoint == 'admin.course' %}active{% endif %}">
+        <img src="{{ url_for('static', filename='images/course.png') }}" class="icon"> Active Course
+    </a>
+    <a href="{{ url_for('admin.logout') }}" class="logout-btn">
+        <img src="{{ url_for('static', filename='images/logout.png') }}" class="icon"> Logout
+    </a>
+</nav>
+
+<main class="main-content">
+
+<div class="container">
+
+  <h1>Activate School Year</h1>
+
+  <form method="POST">
+    <label for="school_year">School Year (e.g., 2024-2025)</label>
+    <input type="text" id="school_year" name="school_year" placeholder="2024-2025" required autocomplete="off">
+
+    <button class="btn" type="submit">Save</button>
+  </form>
+
+  <div class="info-box">
+    <strong>Current Active School Year:</strong><br>
+    {{ active_school_year }}
+  </div>
+
+</div>
+
+</main>
+
+<script>
+  function toggleSidebar() {
+    document.getElementById("sidebar").classList.toggle("open");
+  }
+</script>
+
+</body>
+</html>
