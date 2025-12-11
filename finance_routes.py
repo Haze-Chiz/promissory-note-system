@@ -145,17 +145,25 @@ def promissory_notes():
     if course_filter:
         query = query.filter(PromissoryRequest.course == course_filter)
 
-    results = query.options(joinedload(PromissoryRequest.student)).order_by(
-        PromissoryRequest.requested_at.desc()).all()
+    # Export logic
+    results = query.options(joinedload(PromissoryRequest.student)) \
+                   .order_by(PromissoryRequest.requested_at.desc()) \
+                   .all()
 
     if export_format in ["csv", "excel"]:
         log_action(
-            user_name, f"Exported promissory requests ({export_format.upper()}) with filters: status={status_filter}, semester={semester_filter}, course={course_filter}")
+            user_name, f"Exported promissory requests ({export_format.upper()}) "
+            f"with filters: status={status_filter}, semester={semester_filter}, course={course_filter}")
         return export_promissory_requests(results, export_format)
 
-    pagination = query.paginate(page=page, per_page=per_page, error_out=False)
+    # Pagination with latest first
+    pagination = query.options(joinedload(PromissoryRequest.student)) \
+                      .order_by(PromissoryRequest.requested_at.desc()) \
+                      .paginate(page=page, per_page=per_page, error_out=False)
+
     log_action(
-        user_name, f"Viewed promissory notes page {page} with filters: status={status_filter}, semester={semester_filter}, course={course_filter}")
+        user_name, f"Viewed promissory notes page {page} "
+        f"with filters: status={status_filter}, semester={semester_filter}, course={course_filter}")
 
     return render_template(
         "finance/promissory_notes.html",
