@@ -335,78 +335,77 @@
       cursor: pointer;
     }
 
-    @media (max-width: 900px) {
-      .dash-stats {
-        flex-direction: column;
-        gap: 16px;
-      }
+    .dash-stats {
+      flex-direction: column;
+      gap: 16px;
+    }
 
-      .stat {
-        flex: 1;
-        width: 100%;
-      }
+    .stat {
+      flex: 1;
+      width: 100%;
+    }
 
-      .row {
-        flex-direction: column;
-        gap: 16px;
-      }
+    .row {
+      flex-direction: column;
+      gap: 16px;
+    }
 
-      .panel {
-        width: 100%;
-        min-width: auto;
-      }
+    .panel {
+      width: 100%;
+      min-width: auto;
+    }
 
-      .sidebar {
-        width: 200px;
-        left: -220px;
-        top: 0;
-        height: 100%;
-        padding: 16px 10px;
-        flex-direction: column;
-        transition: left 0.3s ease;
-      }
+    .sidebar {
+      width: 200px;
+      left: -220px;
+      top: 0;
+      height: 100%;
+      padding: 16px 10px;
+      flex-direction: column;
+      transition: left 0.3s ease;
+    }
 
-      .sidebar.active {
-        left: 0;
-      }
+    .sidebar.active {
+      left: 0;
+    }
 
-      .main {
-        margin-left: 0;
-        padding: 16px;
-      }
+    .main {
+      margin-left: 0;
+      padding: 16px;
+    }
 
-      .sidebar-toggle {
-        display: block;
-        position: fixed;
-        top: 36px;
-        right: 25px;
-        z-index: 1100;
-        width: 30px;
-        height: 30px;
-        background: var(--primary);
-        color: #fff;
-        border: none;
-        border-radius: 4px;
-        font-size: 18px;
-        text-align: center;
-        line-height: 30px;
-        cursor: pointer;
-        padding: 0;
-      }
+    .sidebar-toggle {
+      display: block;
+      position: fixed;
+      top: 36px;
+      right: 25px;
+      z-index: 1100;
+      width: 30px;
+      height: 30px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 18px;
+      text-align: center;
+      line-height: 30px;
+      cursor: pointer;
+      padding: 0;
+    }
 
-      table th,
-      table td {
-        font-size: 12px;
-        padding: 8px 6px;
-      }
+    table th,
+    table td {
+      font-size: 12px;
+      padding: 8px 6px;
+    }
 
-      .topbar {
-        padding: 0 16px;
-      }
+    .topbar {
+      padding: 0 16px;
+    }
 
-      .content {
-        padding: 16px;
-      }
+    .content {
+      padding: 16px;
+    }
     }
   </style>
 </head>

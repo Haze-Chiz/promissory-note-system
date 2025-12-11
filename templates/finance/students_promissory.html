@@ -194,19 +194,6 @@
       font-size: 14px;
     }
 
-    @media (max-width: 768px) {
-      .filters {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 10px;
-      }
-
-      .export-buttons {
-        justify-content: flex-start;
-      }
-    }
-
-
     .btn,
     .btn-clear,
     .btn-primary {
@@ -301,35 +288,10 @@
       gap: 5px;
       font-weight: 500;
     }
-
-    @media (max-width: 768px) {
-      .export-buttons {
-        width: 100%;
-        justify-content: flex-start;
-      }
-
-      .sidebar {
-        transform: translateX(-100%);
-      }
-
-      .sidebar.open {
-        transform: translateX(0);
-      }
-
-      .main-content {
-        margin-left: 0;
-        padding-bottom: 120px;
-      }
-
-      .pagination-container {
-        flex-direction: column;
-      }
-    }
   </style>
 </head>
 
 <body>
-  <button class="sidebar-toggle" onclick="toggleSidebar()">☰ Menu</button>
 
   <nav class="sidebar" id="sidebar">
     <h2>{{ finance_user }}<br>Promissory Notes</h2>
