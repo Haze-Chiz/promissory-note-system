@@ -110,6 +110,18 @@
             width: 100%;
         }
 
+        .table-container td:nth-child(1) {
+            width: 50px;
+        }
+        .table-container td:nth-child(2) {
+            width: 400px;
+        }
+        .table-container td:nth-child(3) {
+            width: 400px;
+        }
+        .table-container td:nth-child(1) {
+            width: 400px;
+        }
         table {
             width: 100%;
             border-collapse: collapse;
@@ -342,27 +354,34 @@
             <table>
                 <thead>
                     <tr>
-                        <th style="width:20px">#</th>
-                        <th style="width:100px">User</th>
-                        <th style="width:200px">Action</th>
-                        <th style="width:50px">Timestamp</th>
+                        <th>#</th>
+                        <th>User</th>
+                        <th>Action</th>
+                        <th>Timestamp</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for log in logs.items %}
-                    <tr>
-                        <td>{{ (logs.page - 1) * logs.per_page + loop.index }}</td>
-                        <td>{{ log.user_name or 'System' }}</td>
-                        <td>{{ log.action }}</td>
-                        <td>{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
-                    </tr>
-                    {% else %}
-                    <tr>
-                        <td colspan="4" style="text-align:center;">No logs found.</td>
-                    </tr>
+                    {% set total_rows = 10 %}
+                    {% for i in range(total_rows) %}
+                        <tr>
+                        {% if i < logs.items|length %}
+                            {% set log = logs.items[i] %}
+                            <td>{{ (logs.page - 1) * logs.per_page + i + 1 }}</td>
+                            <td>{{ log.user_name or 'System' }}</td>
+                            <td>{{ log.action }}</td>
+                            <td>{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                        {% else %}
+                            <td>&nbsp;</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        {% endif %}
+                        </tr>
                     {% endfor %}
-                </tbody>
+                    </tbody>
+
             </table>
+            
         </div>
 
         <div class="pagination-container">
