@@ -5,11 +5,10 @@ from models import db, Account, SystemLog
 from admin_routes import admin_bp
 from finance_routes import finance_bp
 from student_routes import student_bp
-from app import app
 import os
 
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+# --- Initialize Flask app ---
+app = Flask(__name__)
 
 # --- Configuration ---
 app.secret_key = "your_super_secret_key_123"
@@ -69,7 +68,6 @@ def login():
             session["role"] = user.role
             session["user_name"] = f"{user.first_name} {user.last_name}"
 
-            # Log the login action
             log_action(user.email, "Logged in")
 
             if user.role == "Admin":
@@ -103,4 +101,4 @@ def finance_dashboard():
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=True)
