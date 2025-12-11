@@ -1,10 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Promissory App — Login</title>
-  <link rel="icon" type="image/x-icon" href="./static/images/FCPC.jpg">
+  <link rel="icon" type="image/png" href="./static/images/FCPC-circle.png">
+
+  <!-- Circular preview in the page -->
+  <img src="./static/images/FCPC-circle.png" alt="FCPC"
+    style="width:32px; height:32px; border-radius:50%; object-fit:cover;">
   <style>
     * {
       margin: 0;
@@ -89,7 +94,7 @@
     }
 
     .options input[type="checkbox"] {
-      accent-color: #1e2a78; 
+      accent-color: #1e2a78;
     }
 
     .btn {
@@ -157,30 +162,34 @@
       body {
         flex-direction: column;
       }
+
       .right {
         order: -1;
         height: 250px;
       }
+
       .left {
         padding: 20px;
       }
+
       .login-box {
         max-width: 100%;
       }
     }
   </style>
 </head>
+
 <body>
   <main class="left">
     <div class="login-box">
       <h2>Login</h2>
 
       {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-          {% for category, message in messages %}
-            <div class="flash {{ category }}">{{ message }}</div>
-          {% endfor %}
-        {% endif %}
+      {% if messages %}
+      {% for category, message in messages %}
+      <div class="flash {{ category }}">{{ message }}</div>
+      {% endfor %}
+      {% endif %}
       {% endwith %}
 
       <form method="POST" action="{{ url_for('login') }}">
@@ -200,4 +209,5 @@
     <img src="{{ url_for('static', filename='images/FCPC.jpg') }}" alt="Logo" class="right-img">
   </aside>
 </body>
+
 </html>

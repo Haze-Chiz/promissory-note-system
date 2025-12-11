@@ -483,33 +483,123 @@
 
     <div class="pagination-container">
       <div class="results-info">Page {{ pagination.page }} of {{ total_pages }}</div>
+
       <div class="pagination">
-        <a class="{% if not pagination.has_prev %}disabled{% endif %}"
-          href="{{ url_for('finance.promissory_notes', page=pagination.prev_num, search=search, status=status_filter, semester=selected_semester, semester_type=selected_semester_type, school_year=selected_school_year) }}">Previous</a>
-        {% for p in range(1, total_pages + 1) %}
-        <a class="{% if p == pagination.page %}active{% endif %}"
-          href="{{ url_for('finance.promissory_notes', page=p, search=search, status=status_filter, semester=selected_semester, semester_type=selected_semester_type, school_year=selected_school_year) }}">{{
-          p }}</a>
-        {% endfor %}
-        <a class="{% if not pagination.has_next %}disabled{% endif %}"
-          href="{{ url_for('finance.promissory_notes', page=pagination.next_num, search=search, status=status_filter, semester=selected_semester, semester_type=selected_semester_type, school_year=selected_school_year) }}">Next</a>
+        <!-- Previous Button -->
+        <button {% if not pagination.has_prev %}disabled{% endif %} onclick="location.href='{{ url_for('finance.promissory_notes',
+        page=pagination.prev_num,
+        search=search,
+        status=status_filter,
+        semester=selected_semester,
+        semester_type=selected_semester_type,
+        school_year=selected_school_year
+      ) }}'">
+          Previous
+        </button>
+
+        {% set total_pages = total_pages %}
+        {% set current = pagination.page %}
+
+        {% if total_pages <= 7 %} {% for p in range(1, total_pages + 1) %} <button
+          class="{% if p == current %}active{% endif %}" onclick="location.href='{{ url_for('finance.promissory_notes',
+            page=p,
+            search=search,
+            status=status_filter,
+            semester=selected_semester,
+            semester_type=selected_semester_type,
+            school_year=selected_school_year
+          ) }}'">{{ p }}</button>
+          {% endfor %}
+          {% else %}
+          {% for p in range(1, 4) %}
+          <button class="{% if p == current %}active{% endif %}" onclick="location.href='{{ url_for('finance.promissory_notes',
+            page=p,
+            search=search,
+            status=status_filter,
+            semester=selected_semester,
+            semester_type=selected_semester_type,
+            school_year=selected_school_year
+          ) }}'">{{ p }}</button>
+          {% endfor %}
+
+          {% if current > 4 and current < total_pages - 3 %} <button disabled>...</button>
+            {% for p in range(current-1, current+2) %}
+            <button class="{% if p == current %}active{% endif %}" onclick="location.href='{{ url_for('finance.promissory_notes',
+              page=p,
+              search=search,
+              status=status_filter,
+              semester=selected_semester,
+              semester_type=selected_semester_type,
+              school_year=selected_school_year
+            ) }}'">{{ p }}</button>
+            {% endfor %}
+            <button disabled>...</button>
+            {% elif current <= 4 %} {% for p in range(4, 6) %} <button class="{% if p == current %}active{% endif %}"
+              onclick="location.href='{{ url_for('finance.promissory_notes',
+              page=p,
+              search=search,
+              status=status_filter,
+              semester=selected_semester,
+              semester_type=selected_semester_type,
+              school_year=selected_school_year
+            ) }}'">{{ p }}</button>
+              {% endfor %}
+              <button disabled>...</button>
+              {% else %}
+              <button disabled>...</button>
+              {% for p in range(total_pages-5, total_pages-2) %}
+              <button class="{% if p == current %}active{% endif %}" onclick="location.href='{{ url_for('finance.promissory_notes',
+              page=p,
+              search=search,
+              status=status_filter,
+              semester=selected_semester,
+              semester_type=selected_semester_type,
+              school_year=selected_school_year
+            ) }}'">{{ p }}</button>
+              {% endfor %}
+              {% endif %}
+
+              {% for p in range(total_pages-2, total_pages+1) %}
+              <button class="{% if p == current %}active{% endif %}" onclick="location.href='{{ url_for('finance.promissory_notes',
+            page=p,
+            search=search,
+            status=status_filter,
+            semester=selected_semester,
+            semester_type=selected_semester_type,
+            school_year=selected_school_year
+          ) }}'">{{ p }}</button>
+              {% endfor %}
+              {% endif %}
+
+              <!-- Next Button -->
+              <button {% if not pagination.has_next %}disabled{% endif %} onclick="location.href='{{ url_for('finance.promissory_notes',
+        page=pagination.next_num,
+        search=search,
+        status=status_filter,
+        semester=selected_semester,
+        semester_type=selected_semester_type,
+        school_year=selected_school_year
+      ) }}'">
+                Next
+              </button>
       </div>
     </div>
+
   </main>
 
-<script>
-  function toggleSidebar() {
-    document.getElementById('sidebar').classList.toggle('open');
-  }
+  <script>
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+    }
 
-  const filterForm = document.querySelector('.filters');
-  const filterSelects = filterForm.querySelectorAll('select');
+    const filterForm = document.querySelector('.filters');
+    const filterSelects = filterForm.querySelectorAll('select');
 
-  // Only auto-submit on select change
-  filterSelects.forEach(el => {
-    el.addEventListener('change', () => filterForm.submit());
-  });
-</script>
+    // Only auto-submit on select change
+    filterSelects.forEach(el => {
+      el.addEventListener('change', () => filterForm.submit());
+    });
+  </script>
 
 </body>
 
