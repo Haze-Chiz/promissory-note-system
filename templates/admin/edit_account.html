@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Edit Account - Promissory App</title>
-  <link rel="icon" type="image/x-icon" href="/images/FCPC.jpg">
+  <link rel="icon" type="image/x-icon" href="./static/images/logo.png">
   <style>
     * {
       margin: 0;
@@ -211,7 +211,7 @@
     }
 
     .btn-back {
-      background: #6c757d;
+      background: white;
       color: #fff;
     }
 
@@ -388,13 +388,10 @@
 
     <section class="form-container">
       <button type="button" onclick="window.history.back()" class="btn btn-back">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"
-          style="margin-right:6px; vertical-align:middle;">
-          <path fill-rule="evenodd"
-            d="M15 8a.5.5 0 0 1-.5.5H2.707l4.147 4.146a.5.5 0 0 1-.708.708l-5-5a.5.5 0 0 1 0-.708l5-5a.5.5 0 0 1 .708.708L2.707 7.5H14.5A.5.5 0 0 1 15 8z" />
-        </svg>
-        
+        <img src="{{ url_for('static', filename='images/back.png') }}" alt="Back"
+          style="width:25px; height:25px; margin-right:6p; vertical-align:middle;">
       </button>
+
 
       <h3>Account Details</h3>
 

@@ -4,14 +4,22 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Dashboard | Student Promissory Notes System</title>
+<<<<<<< HEAD
     <link rel="icon" type="image/x-icon" href="/images/FCPC.jpg" />
+=======
+    <link rel="icon" type="image/x-icon" href="/images/logo.png">
+>>>>>>> origin/main
     <style>
       :root {
         --nav-width: 250px;
         --primary: #4b6cb7;
         --secondary: #182848;
         --accent: #f8b500;
+<<<<<<< HEAD
         --bg: #f4f7fc;
+=======
+        --bg: #f4f7fc;  
+>>>>>>> origin/main
         --card-bg: rgba(255, 255, 255, 0.95);
         --radius: 16px;
         --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
@@ -31,6 +39,7 @@
         box-sizing: border-box;
         font-family: var(--font);
       }
+<<<<<<< HEAD
 
       body {
         min-height: 100vh;
@@ -48,6 +57,23 @@
         color: var(--accent);
       }
 
+=======
+      body {
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--text);
+      }
+
+      a {
+        text-decoration: none;
+        color: inherit;
+        transition: 0.2s ease;
+      }
+      a:hover {
+        color: var(--accent);
+      }
+
+>>>>>>> origin/main
       .app {
         display: flex;
         min-height: 100vh;
@@ -71,6 +97,7 @@
         text-transform: uppercase;
         letter-spacing: 1px;
         font-size: 18px;
+<<<<<<< HEAD
       }
 
       .brand span {
@@ -78,13 +105,24 @@
         opacity: 0.85;
       }
 
+=======
+      }
+      .brand span {
+        font-size: 12px;
+        opacity: 0.85;
+      }
+
+>>>>>>> origin/main
       .nav {
         display: flex;
         flex-direction: column;
         gap: 10px;
         margin-top: 25px;
       }
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/main
       .nav a {
         padding: 14px 18px;
         border-radius: var(--radius);
@@ -95,7 +133,10 @@
         transition: 0.3s ease, transform 0.2s ease;
         position: relative;
       }
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/main
       .nav a:hover,
       .nav a.active {
         background: rgba(255, 255, 255, 0.2);
@@ -115,6 +156,7 @@
         border: none;
         width: 100%;
         transition: 0.3s ease, transform 0.2s ease;
+<<<<<<< HEAD
       }
 
       .logout-btn:hover {
@@ -397,25 +439,327 @@
         .logout-btn {
           margin-bottom: 1000px;
         }
+=======
+      }
+      .logout-btn:hover {
+        background: var(--accent);
+        color: var(--secondary);
+        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+        transform: translateY(-2px);
+      }
+
+      .main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+>>>>>>> origin/main
+      }
+    </style>
+  </head>
+
+<<<<<<< HEAD
+  <body>
+    <div class="app">
+      <button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('active')">☰</button>
+=======
+      .topbar {
+        height: 80px;
+        padding: 0 40px;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+      }
+      .top-left {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .welcome {
+        font-size: 20px;
+        font-weight: 700;
+      }
+
+      .role {
+        font-size: 13px;
+        color: var(--text-light);
+      }
+
+      .content {
+        padding: 30px 40px;
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+      }
+
+      .card {
+        background: var(--card-bg);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        padding: 24px;
+        border: 1px solid var(--border);
+        backdrop-filter: blur(10px);
+        transition: 0.3s ease, transform 0.2s ease;
+      }
+
+      .dash-stats {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+      .stat {
+        flex: 1;
+        text-align: center;
+        padding: 24px;
+        border-radius: var(--radius);
+        background: #fff;
+        box-shadow: var(--shadow);
+        transition: 0.3s ease;
+        cursor: default;
+      }
+      .stat h3 {
+        font-size: 26px;
+        margin-bottom: 8px;
+        color: var(--primary);
+      }
+      .stat p {
+        font-size: 14px;
+        color: var(--text-light);
+      }
+
+      .row {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+      .panel {
+        flex: 1;
+        min-width: 280px;
+        background: var(--card-bg);
+        border-radius: var(--radius);
+        padding: 22px;
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border);
+        display: flex;
+        flex-direction: column;
+        transition: 0.3s ease, transform 0.2s ease;
+      }
+      .panel h4 {
+        font-size: 16px;
+        margin-bottom: 14px;
+        font-weight: 700;
+        color: var(--primary);
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 14px;
+      }
+      th,
+      td {
+        padding: 12px 10px;
+        font-size: 13px;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+      }
+      th {
+        border-bottom: 2px solid var(--border);
+        color: var(--primary);
+        font-weight: 600;
+      }
+      tr:hover td {
+        background: rgba(248, 181, 0, 0.07);
+      }
+
+      .status-badge {
+        display: inline-block;
+        padding: 6px 14px;
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 12px;
+        min-width: 75px;
+        text-align: center;
+        transition: 0.2s ease;
+      }
+      .status-approved {
+        background: rgba(46, 204, 113, 0.15);
+        color: var(--success);
+        border: 1px solid var(--success);
+      }
+      .status-rejected {
+        background: rgba(231, 76, 60, 0.15);
+        color: var(--danger);
+        border: 1px solid var(--danger);
+      }
+      .status-pending {
+        background: rgba(241, 196, 15, 0.15);
+        color: var(--warning);
+        border: 1px solid var(--warning);
+      }
+      .small {
+        font-size: 12px;
+        color: var(--text-light);
+        margin-top: 4px;
+      }
+
+      @media (max-width: 900px) {
+        .dash-stats,
+        .row {
+          flex-direction: column;
+        }
+        .sidebar {
+          width: 200px;
+          padding: 20px 14px;
+          position: fixed;
+          left: -220px;
+          top: 0;
+          height: 100%;
+          z-index: 1000;
+          transition: 0.3s ease;
+        }
+        .sidebar.active {
+          left: 0;
+        }
+        .main {
+          margin-left: 0;
+          width: 100%;
+        }
+        .logout-btn {
+          margin-bottom: 1000px;
+        }
+      }
+
+      .sidebar-toggle {
+        display: none;
+        position: fixed;
+        top: 15px;
+        right: 45px;
+        z-index: 1100;
+        background: var(--primary);
+        color: #fff;
+        border: none;
+        padding: 10px 14px;
+        border-radius: 6px;
+        font-size: 18px;
+        cursor: pointer;
+      }
+
+      @media (max-width: 900px) {
+        .dash-stats {
+          flex-direction: column;
+          gap: 16px;
+        }
+        .stat {
+          flex: 1;
+          width: 100%;
+        }
+
+        .row {
+          flex-direction: column;
+          gap: 16px;
+        }
+        .panel {
+          width: 100%;
+          min-width: auto;
+        }
+
+        .sidebar {
+          width: 200px;
+          left: -220px;
+          top: 0;
+          height: 100%;
+          padding: 16px 10px;
+          flex-direction: column;
+          transition: left 0.3s ease;
+        }
+        .sidebar.active {
+          left: 0;
+        }
+
+        .main {
+          margin-left: 0;
+          padding: 16px;
+        }
+
+        .sidebar-toggle {
+          display: block;
+          position: fixed;
+          top: 36px;
+          right: 25px;
+          z-index: 1100;
+          width: 30px;
+          height: 30px;
+          background: var(--primary);
+          color: #fff;
+          border: none;
+          border-radius: 4px;
+          font-size: 18px;
+          text-align: center;
+          line-height: 30px;
+          cursor: pointer;
+          padding: 0;
+        }
+
+        table th,
+        table td {
+          font-size: 12px;
+          padding: 8px 6px;
+        }
+
+        .topbar {
+          padding: 0 16px;
+        }
+
+        .content {
+          padding: 16px;
+        }
       }
     </style>
   </head>
 
   <body>
     <div class="app">
-      <button class="sidebar-toggle" onclick="document.querySelector('.sidebar').classList.toggle('active')">☰</button>
+      <button
+        class="sidebar-toggle"
+        onclick="document.querySelector('.sidebar').classList.toggle('active')"
+      >
+        ☰
+      </button>
+>>>>>>> origin/main
       <aside class="sidebar">
         <div class="brand">
           <div>Student</div>
           <span>Promissory Notes System</span>
         </div>
         <nav class="nav">
+<<<<<<< HEAD
           <a href="{{ url_for('student.dashboard') }}" class="active">Dashboard</a>
           <a href="{{ url_for('student.request_promissory') }}">Request Promissory</a>
           <a href="{{ url_for('student.history') }}">History</a>
           <a href="{{ url_for('student.setup') }}">Account</a>
         </nav>
         <button class="logout-btn" onclick="window.location.href='{{ url_for('student.logout') }}'">Logout</button>
+=======
+          <a href="{{ url_for('student.dashboard') }}" class="active"
+            >Dashboard</a
+          >
+          <a href="{{ url_for('student.request_promissory') }}"
+            >Request Promissory</a
+          >
+          <a href="{{ url_for('student.history') }}">History</a>
+          <a href="{{ url_for('student.setup') }}">Account</a>
+        </nav>
+        <button
+          class="logout-btn"
+          onclick="window.location.href='{{ url_for('student.logout') }}'"
+        >
+          Logout
+        </button>
+>>>>>>> origin/main
       </aside>
 
       <main class="main">
@@ -483,6 +827,7 @@
 
               <div class="panel">
                 <h4>Alerts & Notifications</h4>
+<<<<<<< HEAD
                 {% if rejected_requests or incomplete_requests %} {% if rejected_requests %}
                 <div style="margin-bottom: 10px">
                   <strong>{{ rejected_requests|length }} Rejected Request(s)</strong>
@@ -492,6 +837,27 @@
                 <div style="margin-bottom: 10px">
                   <strong>{{ incomplete_requests|length }} Incomplete Request(s)</strong>
                   <p class="small">Some requests are missing documents. Please upload them.</p>
+=======
+                {% if rejected_requests or incomplete_requests %} {% if
+                rejected_requests %}
+                <div style="margin-bottom: 10px">
+                  <strong
+                    >{{ rejected_requests|length }} Rejected Request(s)</strong
+                  >
+                  <p class="small">
+                    Review comments and take action if needed.
+                  </p>
+                </div>
+                {% endif %} {% if incomplete_requests %}
+                <div style="margin-bottom: 10px">
+                  <strong
+                    >{{ incomplete_requests|length }} Incomplete
+                    Request(s)</strong
+                  >
+                  <p class="small">
+                    Some requests are missing documents. Please upload them.
+                  </p>
+>>>>>>> origin/main
                 </div>
                 {% endif %} {% else %}
                 <div>

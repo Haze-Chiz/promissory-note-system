@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Promissory Notes Statistics</title>
-<link rel="icon" type="image/x-icon" href="/images/FCPC.jpg">
+<link rel="icon" type="image/x-icon" href="./static/images/logo.png">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 
@@ -52,7 +52,6 @@ body {
     color: #fff;
     text-decoration: none;
     margin: 5px 0;
-    border-radius: 5px;
     transition: 0.3s;
 }
 .sidebar a:hover {
@@ -244,28 +243,12 @@ body {
 .export-btn i {
     margin-right: 6px;
 }
-
-/* Responsive */
-@media(max-width: 768px) {
-    .sidebar {
-        transform: translateX(-100%);
-        position: fixed;
-        z-index: 1000;
-    }
-    .main-content {
-        margin-left: 0;
-        padding: 20px;
-    }
-    .cards {
-        grid-template-columns: 1fr;
-    }
-}
 </style>
 </head>
 
 <body>
 <nav class="sidebar">
-    <h2>{{ finance_user }}<br>Promissory Notes <br>Finance</h2>
+    <h2>{{ finance_user }}<br>Promissory Notes</h2>
     <a href="{{ url_for('finance.dashboard') }}" class="{% if request.endpoint=='finance.dashboard' %}active{% endif %}">
         <img src="{{ url_for('static', filename='images/dashboard.png') }}" class="icon"> Dashboard
     </a>

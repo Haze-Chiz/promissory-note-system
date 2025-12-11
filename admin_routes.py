@@ -411,20 +411,25 @@ def download_template():
 @require_role("Admin")
 def export_csv():
     accounts = Account.query.all()
-    df = pd.DataFrame([{
-        "id": a.id,
-        "full_name": get_full_name(a),
-        "email": a.email,
-        "role": a.role,
-        "status": a.status,
-        "year_level": getattr(a, "year_level", ""),
-        "course": getattr(a, "course", ""),
-        "password": getattr(a, 'plain_password', 'N/A')
-    } for a in accounts])
+    data = [{
+        "ID": a.id,
+        "First_Name": a.first_name,
+        "Middle_Name": a.middle_name,
+        "Last_Name": a.last_name,
+        "Suffix": a.suffix,
+        "Email": a.email,
+        "Role": a.role,
+        "Status": a.status,
+        "Year_Level": getattr(a, "year_level", ""),
+        "Course": getattr(a, "course", ""),
+        "Password": getattr(a, 'plain_password', 'N/A')
+    } for a in accounts]
 
+    df = pd.DataFrame(data)
     output = io.StringIO()
     df.to_csv(output, index=False)
     output.seek(0)
+
     log_action(session.get("user_name", "Admin User"), "Exported all accounts to CSV")
     return send_file(io.BytesIO(output.getvalue().encode()),
                      mimetype="text/csv",
@@ -466,6 +471,6 @@ def export_excel():
 def logout():
     user_name = session.get("user_name", "Admin User")
     session.clear()
-    flash("You have been logged out.", "info")
+    flash("You have been logged out.", "danger")
     log_action(user_name, "Logged out")
     return redirect(url_for("login"))
