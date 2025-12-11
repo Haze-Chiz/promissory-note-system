@@ -255,6 +255,9 @@
     <a href="{{ url_for('admin.course') }}" class="{% if request.endpoint == 'admin.course' %}active{% endif %}">
       <img src="{{ url_for('static', filename='images/course.png') }}" class="icon"> Active Course
     </a>
+    <a href="{{ url_for('admin.logs') }}" class="{% if request.endpoint == 'admin.logs' %}active{% endif %}">
+      <img src="{{ url_for('static', filename='images/log.png') }}" class="icon" alt="Logs Icon"> System Logs
+    </a>
     <a href="{{ url_for('admin.logout') }}" class="logout-btn"><img
         src="{{ url_for('static', filename='images/logout.png') }}" class="icon" alt="Logout Icon"> Logout</a>
   </nav>

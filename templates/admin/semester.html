@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Activate Semester - Admin</title>
 
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Activate Semester - Admin</title>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     body {
       font-family: 'Arial', sans-serif;
@@ -15,251 +20,338 @@
       background-color: #f9f9f9;
     }
 
-  .sidebar {
-    width: 220px;
-    height: 100vh;
-    background: linear-gradient(135deg, #1e2a78, #3a4bb3);
-    color: #fff;
-    position: fixed;
-    top: 0;
-    left: 0;
-    padding-top: 20px;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease;
-  }
-
-  .sidebar h2 {
-    text-align: center;
-    font-size: 16px;
-    margin: 0 10px 30px;
-    font-weight: 300;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .sidebar a {
-    display: flex;
-    align-items: center;
-    padding: 12px 20px;
-    color: #fff;
-    text-decoration: none;
-    margin: 5px 0;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-  }
-
-    .sidebar a.active { background-color: rgba(255, 255, 255, 0.25); font-weight: 600; }
-
-  .sidebar a:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-
-  .sidebar img.icon {
-    width: 30px;
-    height: 30px;
-    margin-right: 10px;
-    background: #fff;
-    border-radius: 50%;
-    padding: 6px;
-  }
-
-  .logout-btn {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 12px 20px;
-    text-decoration: none;
-    border-radius: 0;
-  }
-
-  .main-content {
-    margin-left: 220px;
-    padding: 30px;
-    min-height: 100vh;
-  }
-
-  .sidebar-toggle {
-    display: none;
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    background: #1e2a78;
-    color: #fff;
-    border: none;
-    padding: 10px;
-    border-radius: 5px;
-    cursor: pointer;
-    z-index: 1000;
-  }
-
-  @media (max-width: 768px) {
     .sidebar {
-      transform: translateX(-100%);
+      width: 220px;
+      height: 100vh;
+      background: linear-gradient(135deg, #1e2a78, #3a4bb3);
+      color: #fff;
+      position: fixed;
+      top: 0;
+      left: 0;
+      padding-top: 20px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease;
     }
-    .sidebar.open {
-      transform: translateX(0);
+
+    .sidebar h2 {
+      text-align: center;
+      font-size: 16px;
+      margin: 0 10px 30px;
+      font-weight: 300;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
+
+    .sidebar a {
+      display: flex;
+      align-items: center;
+      padding: 12px 20px;
+      color: #fff;
+      text-decoration: none;
+      margin: 5px 0;
+      transition: background-color 0.3s ease;
+    }
+
+    .sidebar a.active {
+      background-color: rgba(255, 255, 255, 0.25);
+      font-weight: 600;
+    }
+
+    .sidebar a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .sidebar img.icon {
+      width: 30px;
+      height: 30px;
+      margin-right: 10px;
+      background: #fff;
+      border-radius: 50%;
+      padding: 6px;
+    }
+
+    .logout-btn {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 12px 20px;
+      text-decoration: none;
+      border-radius: 0;
+    }
+
     .main-content {
-      margin-left: 0;
+      margin-left: 220px;
+      padding: 30px;
+      min-height: 100vh;
     }
+
     .sidebar-toggle {
-      display: block;
+      display: none;
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      background: #1e2a78;
+      color: #fff;
+      border: none;
+      padding: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 1000;
     }
-  }
 
-  .container {
-    max-width: 600px;
-    margin: 50px auto;
-    background: #fff;
-    padding: 35px 30px;
-    border-radius: 12px;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-    text-align: center;
-  }
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
 
-  h1 {
-    font-size: 26px;
-    color: #1e2a78;
-    margin-bottom: 30px;
-    font-weight: 600;
-  }
+      .sidebar.open {
+        transform: translateX(0);
+      }
 
-  label {
-    display: block;
-    margin-bottom: 10px;
-    font-weight: 500;
-    font-size: 15px;
-    text-align: left;
-  }
+      .main-content {
+        margin-left: 0;
+      }
 
-  select {
-    width: 100%;
-    padding: 14px 12px;
-    font-size: 16px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-    transition: border 0.3s ease, box-shadow 0.3s ease;
-  }
+      .sidebar-toggle {
+        display: block;
+      }
+    }
 
-  select:focus {
-    border-color: #4b6cb7;
-    box-shadow: 0 0 5px rgba(75,108,183,0.3);
-    outline: none;
-  }
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      background: #fff;
+      padding: 35px 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+      text-align: center;
+    }
 
-  .btn {
-    margin-top: 25px;
-    padding: 14px 22px;
-    background: #4b6cb7;
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: 500;
-    transition: background 0.3s ease, transform 0.2s ease;
-  }
+    h1 {
+      font-size: 26px;
+      color: #1e2a78;
+      margin-bottom: 30px;
+      font-weight: 600;
+    }
 
-  .btn:hover {
-    background: #39549b;
-    transform: translateY(-1px);
-  }
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: 500;
+      font-size: 15px;
+      text-align: left;
+    }
 
-  .info-box {
-    background: #eef3ff;
-    padding: 20px;
-    border-left: 5px solid #4b6cb7;
-    margin-top: 30px;
-    border-radius: 8px;
-    text-align: left;
-    font-size: 15px;
-    line-height: 1.5;
-  }
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
 
-  a.back {
-    display: inline-block;
-    margin-bottom: 20px;
-    text-decoration: none;
-    color: #4b6cb7;
-    font-size: 14px;
-    transition: color 0.2s ease;
-  }
+    .hidden {
+      display: none;
+    }
 
-  a.back:hover {
-    text-decoration: underline;
-    color: #39549b;
-  }
-</style>
+    .modal-content {
+      background: #fff;
+      padding: 25px 30px;
+      border-radius: 12px;
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+      font-size: 16px;
+    }
+
+    .btn-confirm {
+      background: #28a745;
+      color: #fff;
+      margin-right: 10px;
+    }
+
+    .btn-cancel {
+      background: #dc3545;
+      color: #fff;
+    }
+
+    .btn-confirm,
+    .btn-cancel {
+      padding: 10px 18px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    select {
+      width: 100%;
+      padding: 14px 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      transition: border 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    select:focus {
+      border-color: #4b6cb7;
+      box-shadow: 0 0 5px rgba(75, 108, 183, 0.3);
+      outline: none;
+    }
+
+    .btn {
+      margin-top: 25px;
+      padding: 14px 22px;
+      background: #4b6cb7;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn:hover {
+      background: #39549b;
+      transform: translateY(-1px);
+    }
+
+    .info-box {
+      background: #eef3ff;
+      padding: 20px;
+      border-left: 5px solid #4b6cb7;
+      margin-top: 30px;
+      border-radius: 8px;
+      text-align: left;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    a.back {
+      display: inline-block;
+      margin-bottom: 20px;
+      text-decoration: none;
+      color: #4b6cb7;
+      font-size: 14px;
+      transition: color 0.2s ease;
+    }
+
+    a.back:hover {
+      text-decoration: underline;
+      color: #39549b;
+    }
+  </style>
 </head>
 
 <body>
 
-<button class="sidebar-toggle" onclick="toggleSidebar()">☰ Menu</button>
+  <button class="sidebar-toggle" onclick="toggleSidebar()">☰ Menu</button>
 
-<nav class="sidebar" id="sidebar">
-  <h2>School Admin<br>Promissory Notes</h2>
+  <nav class="sidebar" id="sidebar">
+    <h2>School Admin<br>Promissory Notes</h2>
 
-  <a href="{{ url_for('admin.dashboard') }}" class="{% if request.endpoint == 'admin.dashboard' %}active{% endif %}">
-    <img src="{{ url_for('static', filename='images/dashboard.png') }}" class="icon" alt="Dashboard Icon"> Dashboard
-  </a>
-
-  <a href="{{ url_for('admin.accounts') }}" class="{% if request.endpoint == 'admin.accounts' %}active{% endif %}">
-    <img src="{{ url_for('static', filename='images/accounts.png') }}" class="icon" alt="Accounts Icon"> Accounts
-  </a>
-
-  <a href="{{ url_for('admin.semester') }}" class="{% if request.endpoint == 'admin.semester' %}active{% endif %}">
-    <img src="{{ url_for('static', filename='images/semester.png') }}" class="icon" alt="Semester Icon"> Semester
-  </a>
-
-  <a href="{{ url_for('admin.school_year') }}" class="{% if request.endpoint == 'admin.school_year' %}active{% endif %}">
-    <img src="{{ url_for('static', filename='images/schoolyear.png') }}" class="icon" alt="School Year Icon"> School Year
-  </a>
-
-    <a href="{{ url_for('admin.course') }}" class="{% if request.endpoint == 'admin.course' %}active{% endif %}">
-        <img src="{{ url_for('static', filename='images/course.png') }}" class="icon"> Active Course
+    <a href="{{ url_for('admin.dashboard') }}" class="{% if request.endpoint == 'admin.dashboard' %}active{% endif %}">
+      <img src="{{ url_for('static', filename='images/dashboard.png') }}" class="icon" alt="Dashboard Icon"> Dashboard
     </a>
 
-  <a href="{{ url_for('admin.logout') }}" class="logout-btn">
-    <img src="{{ url_for('static', filename='images/logout.png') }}" class="icon"> Logout
-  </a>
-</nav>
+    <a href="{{ url_for('admin.accounts') }}" class="{% if request.endpoint == 'admin.accounts' %}active{% endif %}">
+      <img src="{{ url_for('static', filename='images/accounts.png') }}" class="icon" alt="Accounts Icon"> Accounts
+    </a>
 
-<main class="main-content">
+    <a href="{{ url_for('admin.semester') }}" class="{% if request.endpoint == 'admin.semester' %}active{% endif %}">
+      <img src="{{ url_for('static', filename='images/semester.png') }}" class="icon" alt="Semester Icon"> Semester
+    </a>
 
-<div class="container">
+    <a href="{{ url_for('admin.school_year') }}"
+      class="{% if request.endpoint == 'admin.school_year' %}active{% endif %}">
+      <img src="{{ url_for('static', filename='images/schoolyear.png') }}" class="icon" alt="School Year Icon"> School
+      Year
+    </a>
 
-  <h1>Active Semester</h1>
+    <a href="{{ url_for('admin.course') }}" class="{% if request.endpoint == 'admin.course' %}active{% endif %}">
+      <img src="{{ url_for('static', filename='images/course.png') }}" class="icon"> Active Course
+    </a>
+    <a href="{{ url_for('admin.logs') }}" class="{% if request.endpoint == 'admin.logs' %}active{% endif %}">
+      <img src="{{ url_for('static', filename='images/log.png') }}" class="icon" alt="Logs Icon"> System Logs
+    </a>
+    <a href="{{ url_for('admin.logout') }}" class="logout-btn">
+      <img src="{{ url_for('static', filename='images/logout.png') }}" class="icon"> Logout
+    </a>
+  </nav>
 
-  <form method="POST">
-    <label for="semester">Select Current Semester</label>
-    <select id="semester" name="semester" required>
-      <option value="">-- Choose --</option>
-      <option value="First Semester">First Semester</option>
-      <option value="Second Semester">Second Semester</option>
-      <option value="Mid Year">Mid Year</option>
-    </select>
+  <main class="main-content">
 
-    <button class="btn" type="submit">Save</button>
-  </form>
+    <div class="container">
 
-  <div class="info-box">
-    <strong>Current Active Semester:</strong><br>
-    {{ active_semester }}
-  </div>
+      <h1>Active Semester</h1>
 
-</div>
+      <form id="semesterForm" method="POST">
+        <label for="semester">Select Current Semester</label>
+        <select id="semester" name="semester" required>
+          <option value="">Choose Current Semester</option>
+          <option value="First Semester">First Semester</option>
+          <option value="Second Semester">Second Semester</option>
+          <option value="Mid Year">Mid Year</option>
+        </select>
 
-</main>
+        <button class="btn" type="button" onclick="showConfirmation()">Save</button>
+      </form>
 
-<script>
-  function toggleSidebar() {
-    document.getElementById("sidebar").classList.toggle("open");
-  }
-</script>
+      <!-- Custom Confirmation Modal -->
+      <div id="confirmModal" class="modal hidden">
+        <div class="modal-content">
+          <p>Are you sure you want to make this the active semester?</p>
+          <div style="margin-top: 20px;">
+            <button class="btn btn-confirm" onclick="submitForm()">Yes</button>
+            <button class="btn btn-cancel" onclick="hideConfirmation()">No</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-box">
+        <strong>Current Active Semester:</strong><br>
+        {{ active_semester }}
+      </div>
+
+    </div>
+
+  </main>
+
+  <script>
+    function toggleSidebar() {
+      document.getElementById("sidebar").classList.toggle("open");
+    }
+    const modal = document.getElementById('confirmModal');
+    const form = document.getElementById('semesterForm');
+
+    function showConfirmation() {
+      if (!form.semester.value) {
+        alert('Please select a semester first.');
+        return;
+      }
+      modal.classList.remove('hidden');
+    }
+
+    function hideConfirmation() {
+      modal.classList.add('hidden');
+    }
+
+    function submitForm() {
+      form.submit();
+    }
+  </script>
 
 </body>
+
 </html>

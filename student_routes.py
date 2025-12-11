@@ -1,7 +1,7 @@
-from flask import Blueprint, render_template, redirect, url_for, request, flash, session 
+from flask import Blueprint, render_template, redirect, url_for, request, flash, session
 from functools import wraps
 from datetime import datetime
-from models import db, Account, PromissoryRequest, ActiveSettings
+from models import db, Account, PromissoryRequest, ActiveSettings, SystemLog
 import os
 from werkzeug.utils import secure_filename
 
@@ -9,6 +9,7 @@ student_bp = Blueprint("student", __name__,
                        url_prefix="/student", template_folder="templates")
 
 
+# ------------------- Utilities -------------------
 def require_role(role=None):
     def wrapper(func):
         @wraps(func)
@@ -40,15 +41,14 @@ def save_file(file_obj, student_id, category="reason"):
     if not file_obj or not getattr(file_obj, 'filename', None):
         return None
 
-    parts = file_obj.filename.rsplit('.', 1)
-    ext = parts[1].lower() if len(parts) > 1 else ''
-
+    ext = file_obj.filename.rsplit('.', 1)[-1].lower() if '.' in file_obj.filename else ''
     student_folder = os.path.join('static', 'uploads', f'student_{student_id}')
     os.makedirs(student_folder, exist_ok=True)
 
-    existing = [f for f in os.listdir(student_folder) if f.startswith(category)]
+    # Determine next sequential number
+    existing_files = [f for f in os.listdir(student_folder) if f.startswith(category)]
     numbers = []
-    for f in existing:
+    for f in existing_files:
         try:
             numbers.append(int(f.rsplit('_', 1)[-1].split('.')[0]))
         except ValueError:
@@ -62,6 +62,14 @@ def save_file(file_obj, student_id, category="reason"):
     return f"uploads/student_{student_id}/{filename}"
 
 
+def log_action(user_name, action):
+    """Optional logging for student actions"""
+    log = SystemLog(user_name=user_name, action=action)
+    db.session.add(log)
+    db.session.commit()
+
+
+# ------------------- Routes -------------------
 @student_bp.route("/inactive")
 def inactive_notice():
     return render_template("student/inactive_notice.html")
@@ -71,22 +79,18 @@ def inactive_notice():
 @require_role("Student")
 def dashboard():
     student = Account.query.get(session["user_id"])
-    total_promissory = PromissoryRequest.query.filter_by(
-        student_id=student.id).count()
-    active_promissory = PromissoryRequest.query.filter_by(
-        student_id=student.id, status="Pending").count()
+    total_promissory = PromissoryRequest.query.filter_by(student_id=student.id).count()
+    active_promissory = PromissoryRequest.query.filter_by(student_id=student.id, status="Pending").count()
 
     recent_requests = PromissoryRequest.query.filter(
         PromissoryRequest.student_id == student.id,
         PromissoryRequest.status.in_(["Approved", "Rejected"])
     ).order_by(PromissoryRequest.requested_at.desc()).limit(5).all()
 
-    rejected_requests = PromissoryRequest.query.filter_by(
-        student_id=student.id, status="Rejected").all()
+    rejected_requests = PromissoryRequest.query.filter_by(student_id=student.id, status="Rejected").all()
     incomplete_requests = PromissoryRequest.query.filter(
         PromissoryRequest.student_id == student.id,
-        (PromissoryRequest.reason_doc == None) | (
-            PromissoryRequest.valid_id == None)
+        (PromissoryRequest.reason_doc == None) | (PromissoryRequest.valid_id == None)
     ).all()
 
     data = {
@@ -96,6 +100,8 @@ def dashboard():
         "active_promissory": active_promissory,
         "current_time": datetime.now().strftime("%B %d, %Y %I:%M %p")
     }
+
+    log_action(student.email, "Viewed dashboard")
 
     return render_template("student/dashboard.html",
                            data=data,
@@ -110,20 +116,16 @@ def dashboard():
 def request_promissory():
     student = Account.query.get(session["user_id"])
     active_settings = ActiveSettings.query.first()
-    semester, school_year = (
-        (active_settings.active_semester, active_settings.active_school_year)
-        if active_settings else ("Not Set", "Not Set")
-    )
+    semester, school_year = (active_settings.active_semester, active_settings.active_school_year) if active_settings else ("Not Set", "Not Set")
 
     if request.method == "POST":
         reason_text = request.form.get("reason_text", "").strip()
         semester_type = request.form.get("semester_type")
-
         reason_file = request.files.get("reason_doc")
         valid_id_file = request.files.get("valid_id")
 
-        reason_doc = save_file(reason_file, student.id, category="reason") if reason_file else None
-        valid_id = save_file(valid_id_file, student.id, category="valid_id") if valid_id_file else None
+        reason_doc = save_file(reason_file, student.id, "reason") if reason_file else None
+        valid_id = save_file(valid_id_file, student.id, "valid_id") if valid_id_file else None
 
         existing_request = PromissoryRequest.query.filter_by(
             student_id=student.id,
@@ -134,14 +136,10 @@ def request_promissory():
 
         if existing_request:
             if existing_request.status == "Approved":
-                flash(
-                    f"Your {semester_type} request for {semester} ({school_year}) is already approved.", "info"
-                )
+                flash(f"Your {semester_type} request for {semester} ({school_year}) is already approved.", "info")
                 return redirect(url_for("student.request_promissory"))
             elif existing_request.status == "Pending":
-                flash(
-                    f"You already have a pending {semester_type} request for {semester} ({school_year}).", "danger"
-                )
+                flash(f"You already have a pending {semester_type} request for {semester} ({school_year}).", "danger")
                 return redirect(url_for("student.request_promissory"))
 
         if not reason_text and not reason_doc:
@@ -165,16 +163,14 @@ def request_promissory():
 
         db.session.add(new_request)
         db.session.commit()
-
+        log_action(student.email, f"Submitted promissory request for {semester_type} {semester} {school_year}")
         flash("Your promissory request has been submitted.", "success")
         return redirect(url_for("student.request_promissory"))
 
-    return render_template(
-        "student/request.html",
-        student=student,
-        active_semester=semester,
-        active_school_year=school_year
-    )
+    return render_template("student/request.html",
+                           student=student,
+                           active_semester=semester,
+                           active_school_year=school_year)
 
 
 @student_bp.route("/history")
@@ -183,7 +179,6 @@ def history():
     student = Account.query.get(session["user_id"])
     query = PromissoryRequest.query.filter_by(student_id=student.id)
 
-    # Apply filters
     for key in ["status", "semester", "semester_type", "school_year"]:
         value = request.args.get(key, "").strip()
         if value:
@@ -197,20 +192,19 @@ def history():
                     .order_by(PromissoryRequest.school_year.desc())
                     .all()]
 
-    return render_template(
-        "student/history.html",
-        student=student,
-        requests=requests,
-        school_years=school_years
-    )
+    log_action(student.email, "Viewed promissory request history")
+    return render_template("student/history.html",
+                           student=student,
+                           requests=requests,
+                           school_years=school_years)
 
 
 @student_bp.route("/delete_request/<int:request_id>", methods=["POST"])
 @require_role("Student")
 def delete_request(request_id):
     student_id = session["user_id"]
-    req = PromissoryRequest.query.filter_by(
-        id=request_id, student_id=student_id).first()
+    student = Account.query.get(student_id)
+    req = PromissoryRequest.query.filter_by(id=request_id, student_id=student_id).first()
     if not req:
         flash("Request not found.", "danger")
     elif req.status != "Pending":
@@ -219,6 +213,7 @@ def delete_request(request_id):
         db.session.delete(req)
         db.session.commit()
         flash("Pending request has been deleted.", "success")
+        log_action(student.email, f"Deleted pending promissory request ID {request_id}")
     return redirect(url_for("student.history"))
 
 
@@ -229,25 +224,23 @@ def setup():
     db.session.refresh(student)
 
     if request.method == "POST":
-
         for field in ["username", "first_name", "middle_name", "last_name", "email", "phone"]:
             value = request.form.get(field)
-            if value is not None and value.strip() != "":
+            if value and value.strip():
                 setattr(student, field, value)
 
         password = request.form.get("password")
-        if password is not None and password.strip() != "":
+        if password and password.strip():
             student.set_password(password)
 
         db.session.commit()
-        flash("Password updated successfully!", "success")
+        flash("Profile updated successfully!", "success")
+        log_action(student.email, "Updated profile information")
         return redirect(url_for("student.setup"))
 
-    return render_template(
-        "student/setup.html",
-        student=student,
-        student_user=session.get("user_name", "Student User")
-    )
+    return render_template("student/setup.html",
+                           student=student,
+                           student_user=session.get("user_name", "Student User"))
 
 
 @student_bp.route("/view_request/<int:request_id>")
@@ -255,17 +248,19 @@ def setup():
 def view_request(request_id):
     student_id = session["user_id"]
     student = Account.query.get(student_id)
-    req = PromissoryRequest.query.filter_by(
-        id=request_id, student_id=student_id).first()
+    req = PromissoryRequest.query.filter_by(id=request_id, student_id=student_id).first()
     if not req:
         flash("Request not found.", "danger")
         return redirect(url_for("student.history"))
 
+    log_action(student.email, f"Viewed promissory request ID {request_id}")
     return render_template("student/view_request.html", student=student, request=req)
 
 
 @student_bp.route("/logout")
 def logout():
+    user_name = session.get("user_name", "Student User")
     session.clear()
     flash("You have been logged out.", "info")
+    log_action(user_name, "Logged out")
     return redirect(url_for("login"))

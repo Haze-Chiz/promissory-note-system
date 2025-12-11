@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - Promissory Notes</title>
 
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     body {
       font-family: 'Arial', sans-serif;
@@ -51,7 +56,9 @@
       transition: background-color 0.3s ease;
     }
 
-    .sidebar a:hover { background-color: rgba(255, 255, 255, 0.1); }
+    .sidebar a:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+    }
 
     .sidebar img.icon {
       width: 30px;
@@ -62,11 +69,24 @@
       padding: 6px;
     }
 
-    .logout-btn { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px 20px; }
+    .logout-btn {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 12px 20px;
+    }
 
-    .sidebar a.active { background-color: rgba(255, 255, 255, 0.25); font-weight: 600; }
+    .sidebar a.active {
+      background-color: rgba(255, 255, 255, 0.25);
+      font-weight: 600;
+    }
 
-    .main-content { margin-left: 220px; padding: 20px; min-height: 100vh; }
+    .main-content {
+      margin-left: 220px;
+      padding: 20px;
+      min-height: 100vh;
+    }
 
     .header {
       display: flex;
@@ -81,7 +101,10 @@
       gap: 10px;
     }
 
-    .header h2 { font-weight: 300; color: #2c3e50; }
+    .header h2 {
+      font-weight: 300;
+      color: #2c3e50;
+    }
 
     .cards {
       display: grid;
@@ -93,7 +116,7 @@
     .card {
       background: #fff;
       border-radius: 8px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
       padding: 20px;
       text-align: center;
       transition: transform 0.2s ease;
@@ -116,7 +139,7 @@
     .table-card {
       background: #fff;
       border-radius: 8px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
       padding: 20px;
       margin-top: 20px;
       overflow-x: auto;
@@ -131,19 +154,34 @@
       margin-top: 0;
     }
 
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
 
-    th, td {
+    th,
+    td {
       border-bottom: 1px solid #eee;
       text-align: left;
       padding: 12px;
       font-size: 14px;
     }
 
-    th { background: #f3f4f6; color: #1e2a78; font-weight: 500; }
+    th {
+      background: #f3f4f6;
+      color: #1e2a78;
+      font-weight: 500;
+    }
 
-    tbody tr:nth-child(even) { background: #f8f9fa; }
-    tbody tr:hover { background: #e9ecef; transition: background-color 0.2s ease; }
+    tbody tr:nth-child(even) {
+      background: #f8f9fa;
+    }
+
+    tbody tr:hover {
+      background: #e9ecef;
+      transition: background-color 0.2s ease;
+    }
 
     .status {
       padding: 6px 10px;
@@ -154,9 +192,20 @@
       display: inline-block;
     }
 
-    .pending { background: #fff3cd; color: #856404; }
-    .approved { background: #d4edda; color: #155724; }
-    .rejected { background: #f8d7da; color: #721c24; }
+    .pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .approved {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .rejected {
+      background: #f8d7da;
+      color: #721c24;
+    }
 
     .sidebar-toggle {
       display: none;
@@ -173,13 +222,34 @@
     }
 
     @media (max-width: 768px) {
-      .sidebar { transform: translateX(-100%); }
-      .sidebar.open { transform: translateX(0); }
-      .main-content { margin-left: 0; }
-      .sidebar-toggle { display: block; }
-      .cards { grid-template-columns: 1fr; }
-      .header { flex-direction: column; align-items: flex-start; }
-      .table-card { overflow-x: auto; }
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .sidebar-toggle {
+        display: block;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .table-card {
+        overflow-x: auto;
+      }
     }
   </style>
 </head>
@@ -190,19 +260,23 @@
   <nav class="sidebar" id="sidebar">
     <h2>{{ finance_user }}<br>Promissory Notes<br>Finance</h2>
 
-    <a href="{{ url_for('finance.dashboard') }}" class="{% if request.endpoint == 'finance.dashboard' %}active{% endif %}">
+    <a href="{{ url_for('finance.dashboard') }}"
+      class="{% if request.endpoint == 'finance.dashboard' %}active{% endif %}">
       <img src="{{ url_for('static', filename='images/dashboard.png') }}" class="icon" alt="Dashboard Icon"> Dashboard
     </a>
 
-    <a href="{{ url_for('finance.promissory_notes') }}" class="{% if request.endpoint == 'finance.promissory_notes' %}active{% endif %}">
+    <a href="{{ url_for('finance.promissory_notes') }}"
+      class="{% if request.endpoint == 'finance.promissory_notes' %}active{% endif %}">
       <img src="{{ url_for('static', filename='images/notes.png') }}" class="icon" alt="Notes Icon"> Promissory Notes
     </a>
 
-    <a href="{{ url_for('finance.all_promissory') }}" class="{% if request.endpoint == 'finance.all_promissory' %}active{% endif %}">
+    <a href="{{ url_for('finance.all_promissory') }}"
+      class="{% if request.endpoint == 'finance.all_promissory' %}active{% endif %}">
       <img src="{{ url_for('static', filename='images/notes.png') }}" class="icon" alt="Statistics Icon"> Statistics
     </a>
 
-    <a href="{{ url_for('finance.students_promissory') }}" class="{% if request.endpoint=='finance.students_promissory' %}active{% endif %}">
+    <a href="{{ url_for('finance.students_promissory') }}"
+      class="{% if request.endpoint=='finance.students_promissory' %}active{% endif %}">
       <img src="{{ url_for('static', filename='images/students.png') }}" class="icon" alt="Students Icon"> Students
     </a>
 
@@ -214,7 +288,8 @@
   <main class="main-content">
     <header class="header">
       <h2>Dashboard</h2>
-      <div>Active Semester: <strong>{{ active_semester }}</strong> | S.Y.: <strong>{{ active_school_year }}</strong></div>
+      <div>Active Semester: <strong>{{ active_semester }}</strong> | S.Y.: <strong>{{ active_school_year }}</strong>
+      </div>
     </header>
 
     <section class="cards">
@@ -251,20 +326,20 @@
         </thead>
         <tbody>
           {% if recent_requests %}
-            {% for req in recent_requests %}
-              <tr>
-                <td>{{ req.student_name }}</td>
-                <td>{{ req.course }}</td>
-                <td>{{ req.semester }}</td>
-                <td>{{ req.semester_type }}</td>
-                <td>{{ req.date_submitted.strftime('%b %d, %Y') }}</td>
-                <td><span class="status {{ req.status|lower }}">{{ req.status }}</span></td>
-              </tr>
-            {% endfor %}
+          {% for req in recent_requests %}
+          <tr>
+            <td>{{ req.student_name }}</td>
+            <td>{{ req.course }}</td>
+            <td>{{ req.semester }}</td>
+            <td>{{ req.semester_type }}</td>
+            <td>{{ req.date_submitted.strftime('%b %d, %Y') }}</td>
+            <td><span class="status {{ req.status|lower }}">{{ req.status }}</span></td>
+          </tr>
+          {% endfor %}
           {% else %}
-            <tr>
-              <td colspan="6" class="no-data">No recent requests found.</td>
-            </tr>
+          <tr>
+            <td colspan="6" class="no-data">No recent requests found.</td>
+          </tr>
           {% endif %}
         </tbody>
       </table>
@@ -277,4 +352,5 @@
     }
   </script>
 </body>
+
 </html>

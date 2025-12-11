@@ -95,3 +95,16 @@ class ActiveCourse(db.Model):
 
     def __repr__(self):
         return f"<ActiveCourse {self.name}>"
+
+
+class SystemLog(db.Model):
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('account.id'), nullable=True)
+    user = db.relationship('Account', backref='logs')
+    # optional, store name for easier access
+    user_name = db.Column(db.String(150))
+    action = db.Column(db.String(255), nullable=False)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"<SystemLog {self.action} by {self.user_name or 'System'} at {self.timestamp}>"
