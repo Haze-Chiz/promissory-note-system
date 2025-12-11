@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -89,7 +90,7 @@
     }
 
     .options input[type="checkbox"] {
-      accent-color: #1e2a78; 
+      accent-color: #1e2a78;
     }
 
     .btn {
@@ -132,10 +133,14 @@
     }
 
     .flash.danger {
-      background-color: #fee2e2;
-      color: #991b1b;
-      border: 1px solid #fca5a5;
+      background-color: #f87171;
+      color: #fff;
+      border: 1px solid #dc2626;
+      font-weight: 600;
+      font-size: 15px;
+      text-align: center;
     }
+
 
     .right {
       flex: 1;
@@ -157,30 +162,34 @@
       body {
         flex-direction: column;
       }
+
       .right {
         order: -1;
         height: 250px;
       }
+
       .left {
         padding: 20px;
       }
+
       .login-box {
         max-width: 100%;
       }
     }
   </style>
 </head>
+
 <body>
   <main class="left">
     <div class="login-box">
       <h2>Login</h2>
 
       {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-          {% for category, message in messages %}
-            <div class="flash {{ category }}">{{ message }}</div>
-          {% endfor %}
-        {% endif %}
+      {% if messages %}
+      {% for category, message in messages %}
+      <div class="flash {{ category }}">{{ message }}</div>
+      {% endfor %}
+      {% endif %}
       {% endwith %}
 
       <form method="POST" action="{{ url_for('login') }}">
@@ -200,4 +209,5 @@
     <img src="{{ url_for('static', filename='images/FCPC.jpg') }}" alt="Logo" class="right-img">
   </aside>
 </body>
+
 </html>
