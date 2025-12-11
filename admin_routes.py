@@ -471,6 +471,6 @@ def export_excel():
 def logout():
     user_name = session.get("user_name", "Admin User")
     session.clear()
-    flash("You have been logged out.", "info")
+    flash("You have been logged out.", "danger")
     log_action(user_name, "Logged out")
     return redirect(url_for("login"))

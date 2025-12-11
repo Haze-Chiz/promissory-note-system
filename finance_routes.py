@@ -598,6 +598,6 @@ def view_promissory(promissory_id):
 def logout():
     user_name = session.get("user_name", "Finance User")
     session.clear()
-    flash("You have been logged out.", "info")
+    flash("You have been logged out.", "danger")
     log_action(user_name, "Logged out")
     return redirect(url_for("login"))
