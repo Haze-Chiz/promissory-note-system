@@ -333,6 +333,40 @@
       z-index: 1000;
     }
 
+    .pagination-container {
+      margin-top: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .pagination {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pagination button {
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 8px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .pagination button.active {
+      background: #1e2a78;
+      color: #fff;
+      border-color: #1e2a78;
+    }
+
+    .pagination button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
     @media (max-width: 768px) {
       .sidebar {
         transform: translateX(-100%);
