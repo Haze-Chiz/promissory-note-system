@@ -1,480 +1,501 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Account | Student Promissory Notes System</title>
 
-    <style>
-      :root {
-        --nav-width: 250px;
-        --primary: #4b6cb7;
-        --secondary: #182848;
-        --accent: #f8b500;
-        --bg: #f4f7fc;
-        --card-bg: rgba(255, 255, 255, 0.95);
-        --radius: 16px;
-        --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-        --border: rgba(0, 0, 0, 0.06);
-        --text: #111;
-        --text-light: #555;
-        --success: #2ecc71;
-        --danger: #e74c3c;
-        --warning: #f1c40f;
-        --font: "Inter", system-ui, sans-serif;
-        --hover-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Account | Student Promissory Notes System</title>
+  <link rel="icon" type="image/x-icon" href="/images/FCPC.jpg">
+  <style>
+    :root {
+      --nav-width: 250px;
+      --primary: #4b6cb7;
+      --secondary: #182848;
+      --accent: #f8b500;
+      --bg: #f4f7fc;
+      --card-bg: rgba(255, 255, 255, 0.95);
+      --radius: 16px;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      --border: rgba(0, 0, 0, 0.06);
+      --text: #111;
+      --text-light: #555;
+      --success: #2ecc71;
+      --danger: #e74c3c;
+      --warning: #f1c40f;
+      --font: "Inter", system-ui, sans-serif;
+      --hover-shadow: 0 15px 40px rgba(0, 0, 0, 0.12);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: var(--font);
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+      transition: 0.2s ease;
+    }
+
+    a:hover {
+      color: var(--accent);
+    }
+
+    .app {
+      display: flex;
+      min-height: 100vh;
+      flex-direction: row;
+    }
+
+    .sidebar {
+      width: var(--nav-width);
+      background: linear-gradient(180deg, var(--primary), var(--secondary));
+      color: #fff;
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      height: 100vh;
+    }
+
+    .brand {
+      font-weight: 700;
+      text-align: center;
+      font-size: 18px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .brand span {
+      font-size: 12px;
+      opacity: 0.85;
+    }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 25px;
+    }
+
+    .nav a {
+      padding: 14px 18px;
+      border-radius: var(--radius);
+      font-weight: 600;
+      transition: 0.3s ease, transform 0.2s ease;
+    }
+
+    .nav a:hover,
+    .nav a.active {
+      background: rgba(255, 255, 255, 0.2);
+      transform: translateX(6px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .logout-btn {
+      margin-top: auto;
+      padding: 14px 18px;
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      border: none;
+      transition: 0.3s ease, transform 0.2s ease;
+      display: block;
+      width: 100%;
+    }
+
+    .logout-btn:hover {
+      background: var(--accent);
+      color: var(--secondary);
+      box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .topbar {
+      height: 80px;
+      padding: 0 40px;
+      display: flex;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .welcome {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .role {
+      font-size: 13px;
+      color: var(--text-light);
+    }
+
+    .content {
+      flex: 1;
+      padding: 30px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 28px;
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      transition: 0.3s ease, transform 0.2s ease;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      transition: 0.3s ease;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 8px rgba(75, 108, 183, 0.4);
+    }
+
+    input[readonly] {
+      background: #eee;
+      cursor: not-allowed;
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .profile-grid,
+    .form-two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .upload-box {
+      border: 2px dashed rgba(0, 0, 0, 0.1);
+      border-radius: var(--radius);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: var(--shadow);
+      min-height: 130px;
+      transition: 0.3s ease;
+    }
+
+    .upload-box:hover {
+      background: rgba(255, 255, 255, 1);
+      box-shadow: var(--hover-shadow);
+      border-color: var(--primary);
+    }
+
+    .upload-box small {
+      margin-top: 8px;
+      color: var(--text-light);
+    }
+
+    .btn {
+      padding: 12px 20px;
+      border-radius: var(--radius);
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      border: none;
+      transition: 0.3s ease, transform 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent);
+      color: var(--secondary);
+    }
+
+    .btn-ghost {
+      background: #eee;
+      border: 1px solid #ddd;
+    }
+
+    .btn-ghost:hover {
+      background: #ddd;
+    }
+
+    .password-wrapper {
+      position: relative;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 12px;
+      top: 32px;
+      padding: 6px 12px;
+      font-size: 12px;
+      border: none;
+      border-radius: 10px;
+      background: var(--primary);
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s ease;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .toggle-password:hover {
+      background: var(--accent);
+      color: var(--secondary);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    #flash-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #d9534f;
+      color: #fff;
+      padding: 18px 28px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 1.1rem;
+      z-index: 999999;
+      opacity: 0;
+      animation: flashFadeIn 0.6s forwards, flashFadeOut 0.6s 4.6s forwards;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+      text-align: center;
+      max-width: 90%;
+    }
+
+    #flash-popup.success {
+      background: #28a745;
+    }
+
+    #flash-popup.danger {
+      background: #d9534f;
+    }
+
+    @keyframes flashFadeIn {
+      from {
+        opacity: 0;
+        transform: translate(-50%, -55%);
       }
 
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: var(--font);
+      to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
       }
-      body {
-        min-height: 100vh;
-        background: var(--bg);
-        color: var(--text);
-      }
-      a {
-        text-decoration: none;
-        color: inherit;
-        transition: 0.2s ease;
-      }
-      a:hover {
-        color: var(--accent);
+    }
+
+    @keyframes flashFadeOut {
+      from {
+        opacity: 1;
+        transform: translate(-50%, -50%);
       }
 
-      .app {
-        display: flex;
-        min-height: 100vh;
-        flex-direction: row;
+      to {
+        opacity: 0;
+        transform: translate(-50%, -45%);
       }
+    }
+
+    @media (max-width: 980px) {
       .sidebar {
-        width: var(--nav-width);
-        background: linear-gradient(180deg, var(--primary), var(--secondary));
-        color: #fff;
-        padding: 30px 20px;
         display: flex;
-        flex-direction: column;
-        gap: 30px;
-        box-shadow: 2px 0 20px rgba(0, 0, 0, 0.1);
-        transition: all 0.3s ease;
-        height: 100vh;
-      }
-
-      .brand {
-        font-weight: 700;
-        text-align: center;
-        font-size: 18px;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-      }
-      .brand span {
-        font-size: 12px;
-        opacity: 0.85;
+        position: relative;
+        width: 100%;
+        height: auto;
+        padding: 20px;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
       }
 
       .nav {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        margin-top: 25px;
+        flex-direction: row;
+        gap: 8px;
+        margin-top: 0;
+        overflow-x: auto;
       }
+
       .nav a {
-        padding: 14px 18px;
-        border-radius: var(--radius);
-        font-weight: 600;
-        transition: 0.3s ease, transform 0.2s ease;
-      }
-      .nav a:hover,
-      .nav a.active {
-        background: rgba(255, 255, 255, 0.2);
-        transform: translateX(6px);
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        flex: 1;
+        text-align: center;
+        white-space: nowrap;
       }
 
       .logout-btn {
-        margin-top: auto;
-        padding: 14px 18px;
-        border-radius: var(--radius);
-        background: rgba(255, 255, 255, 0.15);
-        color: #fff;
-        font-weight: 600;
-        cursor: pointer;
-        text-align: center;
-        border: none;
-        transition: 0.3s ease, transform 0.2s ease;
-        display: block;
-        width: 100%;
-      }
-      .logout-btn:hover {
-        background: var(--accent);
-        color: var(--secondary);
-        box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
-        transform: translateY(-2px);
+        margin-top: 0;
+        width: auto;
+        padding: 10px 14px;
       }
 
       .main {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-      }
-      .topbar {
-        height: 80px;
-        padding: 0 40px;
-        display: flex;
-        align-items: center;
-        border-bottom: 1px solid var(--border);
-        background: rgba(255, 255, 255, 0.95);
-        backdrop-filter: blur(10px);
-        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
-      }
-      .welcome {
-        font-size: 20px;
-        font-weight: 700;
-      }
-      .role {
-        font-size: 13px;
-        color: var(--text-light);
+        margin-left: 0;
+        width: 100%;
       }
 
       .content {
-        flex: 1;
-        padding: 30px 40px;
-        display: flex;
-        flex-direction: column;
-        gap: 28px;
-      }
-      .card {
-        background: var(--card-bg);
-        border-radius: var(--radius);
-        padding: 28px;
-        border: 1px solid var(--border);
-        box-shadow: var(--shadow);
-        backdrop-filter: blur(10px);
-        transition: 0.3s ease, transform 0.2s ease;
-      }
-
-      input,
-      select,
-      textarea {
-        width: 100%;
-        padding: 12px;
-        border-radius: var(--radius);
-        border: 1px solid var(--border);
-        transition: 0.3s ease;
-      }
-      input:focus,
-      select:focus,
-      textarea:focus {
-        outline: none;
-        border-color: var(--primary);
-        box-shadow: 0 0 8px rgba(75, 108, 183, 0.4);
-      }
-      input[readonly] {
-        background: #eee;
-        cursor: not-allowed;
-      }
-      label {
-        font-weight: 600;
-        font-size: 14px;
-        margin-bottom: 6px;
-        display: block;
+        padding: 16px;
       }
 
       .profile-grid,
       .form-two-col {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 20px;
+        grid-template-columns: 1fr;
       }
+    }
+  </style>
+</head>
 
-      .upload-box {
-        border: 2px dashed rgba(0, 0, 0, 0.1);
-        border-radius: var(--radius);
-        padding: 24px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        background: rgba(255, 255, 255, 0.95);
-        box-shadow: var(--shadow);
-        min-height: 130px;
-        transition: 0.3s ease;
-      }
-      .upload-box:hover {
-        background: rgba(255, 255, 255, 1);
-        box-shadow: var(--hover-shadow);
-        border-color: var(--primary);
-      }
-      .upload-box small {
-        margin-top: 8px;
-        color: var(--text-light);
-      }
+<body>
+  {% with messages = get_flashed_messages(with_categories=true) %} {% if
+  messages %}
+  <div id="flash-popup" class="{{ messages[0][0] }}">
+    {{ messages[0][1] }}
+  </div>
+  {% endif %} {% endwith %}
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        Student<br /><span>Promissory Notes System</span>
+      </div>
 
-      .btn {
-        padding: 12px 20px;
-        border-radius: var(--radius);
-        font-weight: 700;
-        font-size: 14px;
-        cursor: pointer;
-        border: none;
-        transition: 0.3s ease, transform 0.2s ease;
-      }
-      .btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      }
-      .btn-primary {
-        background: var(--primary);
-        color: #fff;
-      }
-      .btn-primary:hover {
-        background: var(--accent);
-        color: var(--secondary);
-      }
-      .btn-ghost {
-        background: #eee;
-        border: 1px solid #ddd;
-      }
-      .btn-ghost:hover {
-        background: #ddd;
-      }
+      <nav class="nav">
+        <a href="{{ url_for('student.dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('student.request_promissory') }}">Request Promissory</a>
+        <a href="{{ url_for('student.history') }}">History</a>
+        <a href="{{ url_for('student.setup') }}" class="active">Account</a>
+      </nav>
 
-      .password-wrapper {
-        position: relative;
-      }
-      .toggle-password {
-        position: absolute;
-        right: 12px;
-        top: 32px;
-        padding: 6px 12px;
-        font-size: 12px;
-        border: none;
-        border-radius: 10px;
-        background: var(--primary);
-        color: #fff;
-        cursor: pointer;
-        transition: 0.3s ease;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
-      }
-      .toggle-password:hover {
-        background: var(--accent);
-        color: var(--secondary);
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-      }
+      <button class="logout-btn" onclick="window.location.href='{{ url_for('student.logout') }}'">
+        Logout
+      </button>
+    </aside>
 
-      #flash-popup {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: #d9534f;
-        color: #fff;
-        padding: 18px 28px;
-        border-radius: 12px;
-        font-weight: 600;
-        font-size: 1.1rem;
-        z-index: 999999;
-        opacity: 0;
-        animation: flashFadeIn 0.6s forwards, flashFadeOut 0.6s 4.6s forwards;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
-        text-align: center;
-        max-width: 90%;
-      }
-      #flash-popup.success {
-        background: #28a745;
-      }
-      #flash-popup.danger {
-        background: #d9534f;
-      }
-
-      @keyframes flashFadeIn {
-        from {
-          opacity: 0;
-          transform: translate(-50%, -55%);
-        }
-        to {
-          opacity: 1;
-          transform: translate(-50%, -50%);
-        }
-      }
-      @keyframes flashFadeOut {
-        from {
-          opacity: 1;
-          transform: translate(-50%, -50%);
-        }
-        to {
-          opacity: 0;
-          transform: translate(-50%, -45%);
-        }
-      }
-
-      @media (max-width: 980px) {
-        .sidebar {
-          display: flex;
-          position: relative;
-          width: 100%;
-          height: auto;
-          padding: 20px;
-          flex-direction: row;
-          justify-content: space-between;
-          align-items: center;
-        }
-        .nav {
-          flex-direction: row;
-          gap: 8px;
-          margin-top: 0;
-          overflow-x: auto;
-        }
-        .nav a {
-          flex: 1;
-          text-align: center;
-          white-space: nowrap;
-        }
-        .logout-btn {
-          margin-top: 0;
-          width: auto;
-          padding: 10px 14px;
-        }
-        .main {
-          margin-left: 0;
-          width: 100%;
-        }
-        .content {
-          padding: 16px;
-        }
-        .profile-grid,
-        .form-two-col {
-          grid-template-columns: 1fr;
-        }
-      }
-    </style>
-  </head>
-
-  <body>
-    {% with messages = get_flashed_messages(with_categories=true) %} {% if
-    messages %}
-    <div id="flash-popup" class="{{ messages[0][0] }}">
-      {{ messages[0][1] }}
-    </div>
-    {% endif %} {% endwith %}
-    <div class="app">
-      <aside class="sidebar">
-        <div class="brand">
-          Student<br /><span>Promissory Notes System</span>
-        </div>
-
-        <nav class="nav">
-          <a href="{{ url_for('student.dashboard') }}">Dashboard</a>
-          <a href="{{ url_for('student.request_promissory') }}"
-            >Request Promissory</a
-          >
-          <a href="{{ url_for('student.history') }}">History</a>
-          <a href="{{ url_for('student.setup') }}" class="active">Account</a>
-        </nav>
-
-        <button
-          class="logout-btn"
-          onclick="window.location.href='{{ url_for('student.logout') }}'"
-        >
-          Logout
-        </button>
-      </aside>
-
-      <main class="main">
-        <header class="topbar">
-          <div>
-            <div class="welcome">
-              {{ student.first_name }} {{ student.last_name }}
-            </div>
-            <div class="role">{{ student.role }}</div>
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <div class="welcome">
+            {{ student.first_name }} {{ student.last_name }}
           </div>
-        </header>
+          <div class="role">{{ student.role }}</div>
+        </div>
+      </header>
 
-        <div class="content">
-          <h2>Account Information</h2>
+      <div class="content">
+        <h2>Account Information</h2>
 
-          <div class="card">
-            <form class="profile-grid" method="POST" autocomplete="off">
-              <div>
-                <label>Email address</label>
-                <input type="email" value="{{ student.email }}" readonly />
-              </div>
+        <div class="card">
+          <form class="profile-grid" method="POST" autocomplete="off">
+            <div>
+              <label>Email address</label>
+              <input type="email" value="{{ student.email }}" readonly />
+            </div>
 
-              <div class="password-wrapper" style="grid-column: 2 / -1">
-                <label>Password</label>
-                <input
-                  type="password"
-                  name="password"
-                  id="password"
-                  value="{{ student.plain_password }}"
-                />
-                <button
-                  type="button"
-                  class="toggle-password"
-                  onclick="togglePassword()"
-                >
-                  Show
-                </button>
-                <div class="small">Use at least 8 characters</div>
-              </div>
+            <div class="password-wrapper" style="grid-column: 2 / -1">
+              <label>Password</label>
+              <input type="password" name="password" id="password" value="{{ student.plain_password }}" />
+              <button type="button" class="toggle-password" onclick="togglePassword()">
+                Show
+              </button>
+              <div class="small">Use at least 8 characters</div>
+            </div>
 
-              <div>
-                <label>First Name</label>
-                <input type="text" value="{{ student.first_name }}" readonly />
-              </div>
+            <div>
+              <label>First Name</label>
+              <input type="text" value="{{ student.first_name }}" readonly />
+            </div>
 
-              <div>
-                <label>Last Name</label>
-                <input type="text" value="{{ student.last_name }}" readonly />
-              </div>
+            <div>
+              <label>Last Name</label>
+              <input type="text" value="{{ student.last_name }}" readonly />
+            </div>
 
-              <div>
-                <label>Middle Name</label>
-                <input type="text" value="{{ student.middle_name }}" readonly />
-              </div>
+            <div>
+              <label>Middle Name</label>
+              <input type="text" value="{{ student.middle_name }}" readonly />
+            </div>
 
-              <div>
-                <label>Course</label>
-                <input type="text" value="{{ student.course }}" readonly />
-              </div>
+            <div>
+              <label>Course</label>
+              <input type="text" value="{{ student.course }}" readonly />
+            </div>
 
-              <div
-                style="
+            <div style="
                   grid-column: 1 / -1;
                   display: flex;
                   gap: 12px;
                   margin-top: 8px;
-                "
-              >
-                <button class="btn btn-primary" type="submit">
-                  Update Password
-                </button>
-                <button class="btn btn-ghost" type="reset">Cancel</button>
-              </div>
-            </form>
-          </div>
+                ">
+              <button class="btn btn-primary" type="submit">
+                Update Password
+              </button>
+              <button class="btn btn-ghost" type="reset">Cancel</button>
+            </div>
+          </form>
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
+  </div>
 
-    <script>
-      function togglePassword() {
-        const input = document.getElementById("password");
-        const btn = document.querySelector(".toggle-password");
+  <script>
+    function togglePassword() {
+      const input = document.getElementById("password");
+      const btn = document.querySelector(".toggle-password");
 
-        if (input.type === "password") {
-          input.type = "text";
-          btn.textContent = "Hide";
-        } else {
-          input.type = "password";
-          btn.textContent = "Show";
-        }
+      if (input.type === "password") {
+        input.type = "text";
+        btn.textContent = "Hide";
+      } else {
+        input.type = "password";
+        btn.textContent = "Show";
       }
-    </script>
-  </body>
+    }
+  </script>
+</body>
+
 </html>

@@ -1,93 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Account Inactive</title>
-<style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #4b6cb7, #182848);
-    min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #333;
-    padding: 20px;
-  }
-
-  .container {
-    max-width: 420px;
-    width: 100%;
-    background: #fff;
-    padding: 35px 30px;
-    border-radius: 14px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-    text-align: center;
-  }
-
-  .icon {
-    font-size: 60px;
-    color: #d9534f;
-    margin-bottom: 20px;
-  }
-
-  h2 {
-    font-size: 26px;
-    margin-bottom: 12px;
-    color: #d9534f;
-  }
-
-  p {
-    font-size: 15px;
-    color: #555;
-    margin-bottom: 25px;
-    line-height: 1.5;
-  }
-
-  .btn {
-    display: inline-block;
-    background: #4b6cb7;
-    color: #fff;
-    padding: 12px 18px;
-    font-size: 15px;
-    border-radius: 6px;
-    text-decoration: none;
-    transition: 0.2s ease;
-  }
-
-  .btn:hover {
-    background: #3c5391;
-  }
-
-  .small-text {
-    margin-top: 15px;
-    font-size: 13px;
-    color: #666;
-  }
-
-  @media(max-width: 480px) {
-    .container {
-      padding: 25px 20px;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Inactive</title>
+  <link rel="icon" type="image/x-icon" href="/images/FCPC.jpg">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
-    .icon { font-size: 50px; }
-    h2 { font-size: 22px; }
-    p { font-size: 14px; }
-    .btn { font-size: 14px; padding: 10px 16px; }
-  }
-</style>
+
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #4b6cb7, #182848);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #333;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 420px;
+      width: 100%;
+      background: #fff;
+      padding: 35px 30px;
+      border-radius: 14px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      text-align: center;
+    }
+
+    .icon {
+      font-size: 60px;
+      color: #d9534f;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      font-size: 26px;
+      margin-bottom: 12px;
+      color: #d9534f;
+    }
+
+    p {
+      font-size: 15px;
+      color: #555;
+      margin-bottom: 25px;
+      line-height: 1.5;
+    }
+
+    .btn {
+      display: inline-block;
+      background: #4b6cb7;
+      color: #fff;
+      padding: 12px 18px;
+      font-size: 15px;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: 0.2s ease;
+    }
+
+    .btn:hover {
+      background: #3c5391;
+    }
+
+    .small-text {
+      margin-top: 15px;
+      font-size: 13px;
+      color: #666;
+    }
+
+    @media(max-width: 480px) {
+      .container {
+        padding: 25px 20px;
+      }
+
+      .icon {
+        font-size: 50px;
+      }
+
+      h2 {
+        font-size: 22px;
+      }
+
+      p {
+        font-size: 14px;
+      }
+
+      .btn {
+        font-size: 14px;
+        padding: 10px 16px;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="container">
-  <div class="icon">⚠️</div>
-  <h2>Account Inactive</h2>
-  <p>Your student account is currently inactive. To request a promissory note, please visit the finance office. Contact the administrator to reactivate your account and regain full access.</p>
-  <a href="{{ url_for('logout') }}" class="btn">Return to Login</a>
-  <div class="small-text">Student Promissory Notes System</div>
-</div>
+  <div class="container">
+    <div class="icon">⚠️</div>
+    <h2>Account Inactive</h2>
+    <p>Your student account is currently inactive. To request a promissory note, please visit the finance office.
+      Contact the administrator to reactivate your account and regain full access.</p>
+    <a href="{{ url_for('logout') }}" class="btn">Return to Login</a>
+    <div class="small-text">Student Promissory Notes System</div>
+  </div>
 
 </body>
+
 </html>
