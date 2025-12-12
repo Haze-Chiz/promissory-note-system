@@ -84,7 +84,7 @@ def dashboard():
     } for r in recent_requests]
 
     log_action(
-        user_name, f"Viewed finance dashboard for {active_semester} {active_school_year}")
+        user_name, f"Viewed finance dashboard")
 
     return render_template(
         "finance/dashboard.html",
@@ -160,10 +160,6 @@ def promissory_notes():
     pagination = query.options(joinedload(PromissoryRequest.student)) \
                       .order_by(PromissoryRequest.requested_at.desc()) \
                       .paginate(page=page, per_page=per_page, error_out=False)
-
-    log_action(
-        user_name, f"Viewed promissory notes page {page} "
-        f"with filters: status={status_filter}, semester={semester_filter}, course={course_filter}")
 
     return render_template(
         "finance/promissory_notes.html",

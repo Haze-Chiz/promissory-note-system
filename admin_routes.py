@@ -106,7 +106,7 @@ def accounts():
     active_school_year = active_settings.active_school_year if active_settings else "Not Set"
     active_course = getattr(active_settings, 'active_course', 'Not Set')
 
-    log_action(session.get("user_name", "Admin User"), f"Viewed accounts page | search={search}, role={role_filter}, status={status_filter}")
+    log_action(session.get("user_name", "Admin User"), f"Viewed accounts page")
 
     return render_template(
         "admin/accounts.html",
