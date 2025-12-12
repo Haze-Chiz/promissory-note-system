@@ -6,6 +6,8 @@ from admin_routes import admin_bp
 from finance_routes import finance_bp
 from student_routes import student_bp
 import os
+from datetime import datetime, timedelta
+
 
 # --- Initialize Flask app ---
 app = Flask(__name__)
@@ -61,9 +63,19 @@ def login():
     if request.method == "POST":
         email = request.form.get("email", "").strip()
         password = request.form.get("password", "")
+        remember = request.form.get("remember")  # <-- NEW
+
         user = Account.query.filter_by(email=email).first()
 
         if user and user.check_password(password):
+
+            # Make session permanent if "Remember Me" is checked
+            if remember:
+                session.permanent = True  # cookie persists
+                app.permanent_session_lifetime = timedelta(days=30)
+            else:
+                session.permanent = False  # session ends on browser close
+
             session["user_id"] = user.id
             session["role"] = user.role
             session["user_name"] = f"{user.first_name} {user.last_name}"
@@ -79,9 +91,12 @@ def login():
             else:
                 flash("Unknown role. Contact administrator.", "danger")
                 return redirect(url_for("login"))
+
         else:
             flash("Invalid email or password", "danger")
+
     return render_template("login.html")
+
 
 @app.route("/logout")
 def logout():
