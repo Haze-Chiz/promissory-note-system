@@ -104,6 +104,7 @@ def dashboard():
     log_action(student.email, "Viewed dashboard")
 
     return render_template("student/dashboard.html",
+                           student=student,
                            data=data,
                            recent_requests=recent_requests,
                            rejected_requests=rejected_requests,
