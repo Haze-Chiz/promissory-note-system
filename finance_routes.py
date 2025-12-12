@@ -15,7 +15,7 @@ finance_bp = Blueprint("finance", __name__,
                        url_prefix="/finance", template_folder="templates")
 
 
-# ------------------- Utilities -------------------
+#UTILITY FUNCTION
 def require_role(role=None):
     def wrapper(func):
         @wraps(func)
@@ -44,13 +44,12 @@ def get_active_settings():
 
 
 def log_action(user_name, action):
-    """Record a user action in the SystemLog."""
     log = SystemLog(user_name=user_name, action=action)
     db.session.add(log)
     db.session.commit()
 
 
-# ------------------- Dashboard -------------------
+#DASHBOARD
 @finance_bp.route("/dashboard")
 @require_role("Finance")
 def dashboard():
@@ -69,9 +68,9 @@ def dashboard():
         "total_rejected": base_query.filter_by(status="Rejected").count(),
     }
 
-    recent_requests = base_query.join(Account, PromissoryRequest.student_id == Account.id)\
-        .filter(PromissoryRequest.status == "Pending")\
-        .order_by(PromissoryRequest.requested_at.desc())\
+    recent_requests = base_query.join(Account, PromissoryRequest.student_id == Account.id) \
+        .filter(PromissoryRequest.status == "Pending") \
+        .order_by(PromissoryRequest.requested_at.desc()) \
         .limit(5).all()
 
     recent_requests = [{
@@ -83,8 +82,7 @@ def dashboard():
         "status": r.status
     } for r in recent_requests]
 
-    log_action(
-        user_name, f"Viewed finance dashboard")
+    log_action(user_name, "Viewed finance dashboard")
 
     return render_template(
         "finance/dashboard.html",
@@ -96,21 +94,19 @@ def dashboard():
     )
 
 
+#PROMISSORY LIST
 @finance_bp.route("/promissory-notes")
 @require_role("Finance")
 def promissory_notes():
     user_name = session.get("user_name", "Finance User")
     active_semester, active_school_year = get_active_settings()
-    all_courses = [c.name for c in ActiveCourse.query.order_by(
-        ActiveCourse.name).all()]
-    all_semesters = [s[0] for s in db.session.query(
-        PromissoryRequest.semester).distinct()]
-    all_semester_types = [s[0] for s in db.session.query(
-        PromissoryRequest.semester_type).distinct()]
-    all_school_years = [sy[0] for sy in db.session.query(
+
+    all_courses = [c.name for c in ActiveCourse.query.order_by(ActiveCourse.name).all()]
+    all_semesters = [s[0] for s in db.session.query(PromissoryRequest.semester).distinct()]
+    all_semester_types = [s[0] for s in db.session.query(PromissoryRequest.semester_type).distinct()]
+    all_school_years = [s[0] for s in db.session.query(
         PromissoryRequest.school_year).distinct().order_by(PromissoryRequest.school_year.desc())]
 
-    # Filters
     search = request.args.get("search", "").strip()
     status_filter = request.args.get("status", "Pending").capitalize()
     semester_filter = request.args.get("semester", active_semester)
@@ -122,7 +118,8 @@ def promissory_notes():
     per_page = 8
 
     query = PromissoryRequest.query.join(
-        Account, PromissoryRequest.student_id == Account.id)
+        Account, PromissoryRequest.student_id == Account.id
+    )
 
     if search:
         term = f"%{search}%"
@@ -137,26 +134,24 @@ def promissory_notes():
     if semester_filter:
         query = query.filter(PromissoryRequest.semester == semester_filter)
     if semester_type_filter:
-        query = query.filter(
-            PromissoryRequest.semester_type == semester_type_filter)
+        query = query.filter(PromissoryRequest.semester_type == semester_type_filter)
     if school_year_filter:
-        query = query.filter(
-            PromissoryRequest.school_year == school_year_filter)
+        query = query.filter(PromissoryRequest.school_year == school_year_filter)
     if course_filter:
         query = query.filter(PromissoryRequest.course == course_filter)
 
-    # Export logic
     results = query.options(joinedload(PromissoryRequest.student)) \
                    .order_by(PromissoryRequest.requested_at.desc()) \
                    .all()
 
     if export_format in ["csv", "excel"]:
         log_action(
-            user_name, f"Exported promissory requests ({export_format.upper()}) "
-            f"with filters: status={status_filter}, semester={semester_filter}, course={course_filter}")
+            user_name,
+            f"Exported promissory requests ({export_format.upper()}) "
+            f"with filters: status={status_filter}, semester={semester_filter}, course={course_filter}"
+        )
         return export_promissory_requests(results, export_format)
 
-    # Pagination with latest first
     pagination = query.options(joinedload(PromissoryRequest.student)) \
                       .order_by(PromissoryRequest.requested_at.desc()) \
                       .paginate(page=page, per_page=per_page, error_out=False)
@@ -181,9 +176,8 @@ def promissory_notes():
         total_pages=pagination.pages
     )
 
-# ------------------- Export Promissory -------------------
 
-
+#EXPORT PROMISSORY
 def export_promissory_requests(results, export_format):
     data = [{
         "Student Name": f"{r.student.first_name} {r.student.middle_name or ''} {r.student.last_name} {r.student.suffix or ''}",
@@ -200,7 +194,8 @@ def export_promissory_requests(results, export_format):
         writer.writeheader()
         writer.writerows(data)
         output.seek(0)
-        return send_file(io.BytesIO(output.getvalue().encode()), mimetype="text/csv", as_attachment=True, download_name="promissory_requests.csv")
+        return send_file(io.BytesIO(output.getvalue().encode()), mimetype="text/csv",
+                         as_attachment=True, download_name="promissory_requests.csv")
 
     elif export_format == "excel":
         df = pd.DataFrame(data)
@@ -208,69 +203,60 @@ def export_promissory_requests(results, export_format):
         with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
             df.to_excel(writer, index=False, sheet_name='Promissory Requests')
         output.seek(0)
-        return send_file(output, mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", as_attachment=True, download_name="promissory_requests.xlsx")
+        return send_file(
+            output,
+            mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            as_attachment=True,
+            download_name="promissory_requests.xlsx"
+        )
 
 
+#ALL PROMISSORY ANALYTICS
 @finance_bp.route("/all-promissory")
 @require_role("Finance")
 def all_promissory():
-    import calendar
-    import io
-    import pandas as pd
-    from flask import Response, session, request, render_template
-    from collections import defaultdict
-    import json
-    from models import Account, PromissoryRequest, db
-    from sqlalchemy.orm import joinedload
-
     active_semester, active_school_year = get_active_settings()
 
     course_filter = request.args.get("course", "").strip() or None
     semester_filter = request.args.get("semester", active_semester)
     if semester_filter == "all":
         semester_filter = None
+
     status_filter = request.args.get("status", "all").lower()
-    semester_type_filter = request.args.get(
-        "semester_type", "").strip() or None
-    school_year_filter = request.args.get(
-        "school_year", active_school_year).strip()
+    semester_type_filter = request.args.get("semester_type", "").strip() or None
+    school_year_filter = request.args.get("school_year", active_school_year).strip()
     if school_year_filter.lower() == "all":
         school_year_filter = None
 
     all_students_query = Account.query.filter(Account._role == "Student")
     if course_filter:
-        all_students_query = all_students_query.filter(
-            Account.course == course_filter)
+        all_students_query = all_students_query.filter(Account.course == course_filter)
+
     all_students = all_students_query.all()
     total_students = len(all_students)
 
     requests_query = PromissoryRequest.query.join(
-        Account, PromissoryRequest.student_id == Account.id)
-    if course_filter:
-        requests_query = requests_query.filter(
-            PromissoryRequest.course == course_filter)
-    if semester_filter:
-        requests_query = requests_query.filter(
-            PromissoryRequest.semester == semester_filter)
-    if semester_type_filter:
-        requests_query = requests_query.filter(
-            PromissoryRequest.semester_type == semester_type_filter)
-    if school_year_filter:
-        requests_query = requests_query.filter(
-            PromissoryRequest.school_year == school_year_filter)
-    if status_filter != "all":
-        requests_query = requests_query.filter(
-            PromissoryRequest.status.ilike(status_filter))
+        Account, PromissoryRequest.student_id == Account.id
+    )
 
-    promissory_requests = requests_query.options(
-        joinedload(PromissoryRequest.student)).all()
+    if course_filter:
+        requests_query = requests_query.filter(PromissoryRequest.course == course_filter)
+    if semester_filter:
+        requests_query = requests_query.filter(PromissoryRequest.semester == semester_filter)
+    if semester_type_filter:
+        requests_query = requests_query.filter(PromissoryRequest.semester_type == semester_type_filter)
+    if school_year_filter:
+        requests_query = requests_query.filter(PromissoryRequest.school_year == school_year_filter)
+    if status_filter != "all":
+        requests_query = requests_query.filter(PromissoryRequest.status.ilike(status_filter))
+
+    promissory_requests = requests_query.options(joinedload(PromissoryRequest.student)).all()
 
     export_format = request.args.get("export")
     if export_format in ("csv", "excel"):
         data = []
         for r in promissory_requests:
-            student_name = f"{getattr(r.student, 'first_name', '')} {getattr(r.student, 'last_name', '')}".strip(
-            ) or "N/A"
+            student_name = f"{getattr(r.student, 'first_name', '')} {getattr(r.student, 'last_name', '')}".strip() or "N/A"
             data.append({
                 "Student Name": student_name,
                 "Course": r.course,
@@ -280,75 +266,76 @@ def all_promissory():
                 "Date Submitted": r.requested_at.strftime("%b %d, %Y"),
                 "Status": r.status
             })
+
         df = pd.DataFrame(data)
+        output = io.BytesIO()
 
         if export_format == "csv":
-            output = df.to_csv(index=False)
             return Response(
-                output,
+                df.to_csv(index=False),
                 mimetype="text/csv",
-                headers={
-                    "Content-Disposition": "attachment; filename=promissory_requests.csv"}
+                headers={"Content-Disposition": "attachment; filename=promissory_requests.csv"}
             )
         else:
-            output = io.BytesIO()
             with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-                df.to_excel(writer, index=False,
-                            sheet_name='Promissory Requests')
+                df.to_excel(writer, index=False, sheet_name='Promissory Requests')
             output.seek(0)
             return Response(
                 output,
                 mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                headers={
-                    "Content-Disposition": "attachment; filename=promissory_requests.xlsx"}
+                headers={"Content-Disposition": "attachment; filename=promissory_requests.xlsx"}
             )
 
     unique_student_ids = {r.student_id for r in promissory_requests}
     total_requested = len(unique_student_ids)
     selected_status = status_filter
 
-    courses = [c[0] for c in db.session.query(
-        PromissoryRequest.course).distinct()]
-    semesters = [s[0] for s in db.session.query(
-        PromissoryRequest.semester).distinct()]
-    semester_types = [s[0] for s in db.session.query(
-        PromissoryRequest.semester_type).distinct()]
+    courses = [c[0] for c in db.session.query(PromissoryRequest.course).distinct()]
+    semesters = [s[0] for s in db.session.query(PromissoryRequest.semester).distinct()]
+    semester_types = [s[0] for s in db.session.query(PromissoryRequest.semester_type).distinct()]
     school_years = sorted(
-        [y[0] for y in db.session.query(
-            PromissoryRequest.school_year).distinct()],
+        [y[0] for y in db.session.query(PromissoryRequest.school_year).distinct()],
         key=lambda x: int(x.split('-')[0])
     )
 
     monthly_course_counts = defaultdict(lambda: [0]*12)
     course_student_counts = defaultdict(set)
+
     for r in promissory_requests:
         idx = r.requested_at.month - 1
         monthly_course_counts[r.course][idx] += 1
         course_student_counts[r.course].add(r.student_id)
 
-    top_course = max(monthly_course_counts.items(), key=lambda x: sum(x[1]))[
-        0] if monthly_course_counts else "N/A"
+    top_course = max(monthly_course_counts.items(), key=lambda x: sum(x[1]))[0] if monthly_course_counts else "N/A"
     months = [calendar.month_abbr[i+1] for i in range(12)]
     top_course_monthly = monthly_course_counts.get(top_course, [0]*12)
 
-    courses_sorted = [c for c, _ in sorted(((course, len(
-        students)) for course, students in course_student_counts.items()), key=lambda x: x[1])]
+    courses_sorted = [c for c, _ in sorted(
+        ((course, len(students)) for course, students in course_student_counts.items()),
+        key=lambda x: x[1]
+    )]
+
     counts_sorted = [len(course_student_counts[c]) for c in courses_sorted]
-    totals_sorted = [sum(1 for s in all_students if s.course == c)
-                     for c in courses_sorted]
-    percentages_sorted = [round((counts_sorted[i]/totals_sorted[i])*100, 2)
-                          if totals_sorted[i] else 0 for i in range(len(courses_sorted))]
+    totals_sorted = [sum(1 for s in all_students if s.course == c) for c in courses_sorted]
+
+    percentages_sorted = [
+        round((counts_sorted[i] / totals_sorted[i]) * 100, 2) if totals_sorted[i] else 0
+        for i in range(len(courses_sorted))
+    ]
 
     sorted_percentages = sorted(
-        zip(courses_sorted, percentages_sorted), key=lambda x: x[1], reverse=True)
+        zip(courses_sorted, percentages_sorted), key=lambda x: x[1], reverse=True
+    )
+
     if sorted_percentages:
-        percentage_courses_sorted, percentages_sorted_desc = zip(
-            *sorted_percentages)
+        percentage_courses_sorted, percentages_sorted_desc = zip(*sorted_percentages)
     else:
         percentage_courses_sorted, percentages_sorted_desc = [], []
 
-    bar_data = {"labels": ["Total Students", "Requested Promissory"], "values": [
-        total_students, total_requested]}
+    bar_data = {
+        "labels": ["Total Students", "Requested Promissory"],
+        "values": [total_students, total_requested]
+    }
 
     return render_template(
         "finance/all_promissory.html",
@@ -379,6 +366,7 @@ def all_promissory():
     )
 
 
+#STUDENTS PROMISSORY LIST
 @finance_bp.route("/students-promissory")
 @require_role("Finance")
 def students_promissory():
@@ -388,15 +376,10 @@ def students_promissory():
 
     active_semester, active_school_year = get_active_settings()
 
-    # Dropdown options
-    all_courses = [c.name for c in ActiveCourse.query.order_by(
-        ActiveCourse.name).all()]
-    all_semesters = [s[0] for s in db.session.query(
-        PromissoryRequest.semester).distinct()]
-    all_school_years = [s[0] for s in db.session.query(
-        PromissoryRequest.school_year).distinct()]
+    all_courses = [c.name for c in ActiveCourse.query.order_by(ActiveCourse.name).all()]
+    all_semesters = [s[0] for s in db.session.query(PromissoryRequest.semester).distinct()]
+    all_school_years = [s[0] for s in db.session.query(PromissoryRequest.school_year).distinct()]
 
-    # Filters from query parameters
     search = request.args.get("search", "").strip()
     selected_semester = request.args.get("semester", None)
     selected_semester_type = request.args.get("semester_type", None)
@@ -404,77 +387,58 @@ def students_promissory():
     selected_year_level = request.args.get("year_level", None)
     selected_school_year = request.args.get("school_year", None)
 
-    # Default semester and school year if not selected and not paginated
     if selected_semester is None and 'page' not in request.args:
         selected_semester = active_semester
     if selected_school_year is None and 'page' not in request.args:
         selected_school_year = active_school_year
 
-    # Base query for students
-    students_query = db.session.query(
-        Account).filter(Account._role == "Student")
+    students_query = db.session.query(Account).filter(Account._role == "Student")
 
-    # Apply student-level filters
     if search:
         term = f"%{search}%"
-        # Match full concatenated name or individual fields (first + last)
         students_query = students_query.filter(
-            func.concat(
-                Account.first_name, ' ',
-                Account.last_name
-            ).ilike(term) |
-            (Account.first_name.ilike(term)) |
-            (Account.last_name.ilike(term))
+            func.concat(Account.first_name, ' ', Account.last_name).ilike(term) |
+            Account.first_name.ilike(term) |
+            Account.last_name.ilike(term)
         )
 
     if selected_course:
-        students_query = students_query.filter(
-            Account.course == selected_course)
+        students_query = students_query.filter(Account.course == selected_course)
 
     if selected_year_level:
-        students_query = students_query.filter(
-            Account.year_level == selected_year_level)
+        students_query = students_query.filter(Account.year_level == selected_year_level)
 
-    # Subquery: requests matching the currently applied filters
     requests_query = db.session.query(
         PromissoryRequest.student_id,
         func.count(PromissoryRequest.id).label("requests_count")
     ).group_by(PromissoryRequest.student_id)
 
     if selected_semester:
-        requests_query = requests_query.filter(
-            PromissoryRequest.semester == selected_semester)
+        requests_query = requests_query.filter(PromissoryRequest.semester == selected_semester)
     if selected_semester_type:
-        requests_query = requests_query.filter(
-            PromissoryRequest.semester_type == selected_semester_type)
+        requests_query = requests_query.filter(PromissoryRequest.semester_type == selected_semester_type)
     if selected_course:
-        requests_query = requests_query.filter(
-            PromissoryRequest.course == selected_course)
+        requests_query = requests_query.filter(PromissoryRequest.course == selected_course)
     if selected_school_year:
-        requests_query = requests_query.filter(
-            PromissoryRequest.school_year == selected_school_year)
+        requests_query = requests_query.filter(PromissoryRequest.school_year == selected_school_year)
 
     requests_subq = requests_query.subquery()
 
-    # Join students with filtered requests
     students_query = students_query.outerjoin(
         requests_subq, requests_subq.c.student_id == Account.id
     ).add_columns(
-        func.coalesce(requests_subq.c.requests_count,
-                      0).label("requests_count")
+        func.coalesce(requests_subq.c.requests_count, 0).label("requests_count")
     )
 
-    # Exclude students with 0 requests
     students_query = students_query.filter(
-        func.coalesce(requests_subq.c.requests_count, 0) > 0)
+        func.coalesce(requests_subq.c.requests_count, 0) > 0
+    )
 
-    # Order by requests_count then last_name
     students_query = students_query.order_by(
         func.coalesce(requests_subq.c.requests_count, 0).desc(),
         Account.last_name
     )
 
-    # Export handling
     if export_format in ["csv", "excel"]:
         students_data = students_query.all()
         data = [{
@@ -501,14 +465,14 @@ def students_promissory():
                 df.to_excel(writer, index=False,
                             sheet_name="Students Promissory")
             output.seek(0)
-            return send_file(output,
-                             mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                             download_name="students_promissory.xlsx",
-                             as_attachment=True)
+            return send_file(
+                output,
+                mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                download_name="students_promissory.xlsx",
+                as_attachment=True
+            )
 
-    # Pagination
-    students = students_query.paginate(
-        page=page, per_page=per_page, error_out=False)
+    students = students_query.paginate(page=page, per_page=per_page, error_out=False)
 
     return render_template(
         "finance/students_promissory.html",
@@ -528,39 +492,56 @@ def students_promissory():
     )
 
 
+#UPDATE PROMISSORY 
 @finance_bp.route("/promissory/<int:promissory_id>/update", methods=["POST"])
 @require_role("Finance")
 def update_promissory(promissory_id):
     user_name = session.get("user_name", "Finance User")
     promissory_req = PromissoryRequest.query.get_or_404(promissory_id)
+
     action = request.form.get("action")
     old_status = promissory_req.status
+
     if action in ["approve", "reject"]:
         promissory_req.status = "Approved" if action == "approve" else "Rejected"
+
     promissory_req.comments = request.form.get("comments", "").strip()
     promissory_req.updated_at = datetime.now()
+
     db.session.commit()
+
     log_action(
-        user_name, f"{action.capitalize()}d promissory note ID {promissory_id} (from {old_status} to {promissory_req.status})")
+        user_name,
+        f"{action.capitalize()}d promissory note ID {promissory_id} (from {old_status} to {promissory_req.status})"
+    )
+
     flash(f"Promissory Note {action.capitalize()}d successfully.", "success")
     return redirect(url_for("finance.view_promissory", promissory_id=promissory_id))
 
 
-# ------------------- View Promissory -------------------
+#VIEW PROMISSORY DETAILS 
 @finance_bp.route("/promissory/<int:promissory_id>")
 @require_role("Finance")
 def view_promissory(promissory_id):
     user_name = session.get("user_name", "Finance User")
     promissory_req = PromissoryRequest.query.get(promissory_id)
+
     if not promissory_req:
         flash("The selected promissory note was not found or has been deleted.", "warning")
-        return render_template("finance/promissory_details.html",
-                               student=None, promissory_data=None, promissory_history=[],
-                               finance_user=user_name)
+        return render_template(
+            "finance/promissory_details.html",
+            student=None,
+            promissory_data=None,
+            promissory_history=[],
+            finance_user=user_name
+        )
 
     student = promissory_req.student
+
     history_query = PromissoryRequest.query.filter_by(
-        student_id=student.id).order_by(PromissoryRequest.requested_at.desc()).all()
+        student_id=student.id
+    ).order_by(PromissoryRequest.requested_at.desc()).all()
+
     promissory_data = {
         "note_id": promissory_req.id,
         "reason_text": promissory_req.reason_text,
@@ -571,6 +552,7 @@ def view_promissory(promissory_id):
         "semester_type": promissory_req.semester_type or "N/A",
         "date_submitted": promissory_req.requested_at.strftime('%b %d, %Y')
     }
+
     promissory_history = [{
         "date": r.requested_at.strftime('%b %d, %Y'),
         "note_id": r.id,
@@ -580,6 +562,7 @@ def view_promissory(promissory_id):
     } for r in history_query]
 
     log_action(user_name, f"Viewed promissory note ID {promissory_id} details")
+
     return render_template(
         "finance/promissory_details.html",
         student=student,
@@ -589,11 +572,12 @@ def view_promissory(promissory_id):
     )
 
 
-# ------------------- Logout -------------------
+#LOGOUT
 @finance_bp.route("/logout")
 def logout():
     user_name = session.get("user_name", "Finance User")
     session.clear()
     flash("You have been logged out.", "danger")
+
     log_action(user_name, "Logged out")
     return redirect(url_for("login"))

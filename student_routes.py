@@ -9,7 +9,7 @@ student_bp = Blueprint("student", __name__,
                        url_prefix="/student", template_folder="templates")
 
 
-# ------------------- Utilities -------------------
+#UTILITY FUNCTION
 def require_role(role=None):
     def wrapper(func):
         @wraps(func)
@@ -45,7 +45,6 @@ def save_file(file_obj, student_id, category="reason"):
     student_folder = os.path.join('static', 'uploads', f'student_{student_id}')
     os.makedirs(student_folder, exist_ok=True)
 
-    # Determine next sequential number
     existing_files = [f for f in os.listdir(student_folder) if f.startswith(category)]
     numbers = []
     for f in existing_files:
@@ -69,12 +68,12 @@ def log_action(user_name, action):
     db.session.commit()
 
 
-# ------------------- Routes -------------------
+#INACTIVE ACCOUNT NOTICE
 @student_bp.route("/inactive")
 def inactive_notice():
     return render_template("student/inactive_notice.html")
 
-
+#DASHBOARD
 @student_bp.route("/dashboard")
 @require_role("Student")
 def dashboard():
@@ -111,7 +110,7 @@ def dashboard():
                            incomplete_requests=incomplete_requests)
 
 
-
+#REQUEST PROMISSORY
 @student_bp.route("/request", methods=["GET", "POST"])
 @require_role("Student")
 def request_promissory():
@@ -173,7 +172,7 @@ def request_promissory():
                            active_semester=semester,
                            active_school_year=school_year)
 
-
+#HISTORY
 @student_bp.route("/history")
 @require_role("Student")
 def history():
@@ -199,7 +198,7 @@ def history():
                            requests=requests,
                            school_years=school_years)
 
-
+#DELETE REQUEST
 @student_bp.route("/delete_request/<int:request_id>", methods=["POST"])
 @require_role("Student")
 def delete_request(request_id):
@@ -217,7 +216,7 @@ def delete_request(request_id):
         log_action(student.email, f"Deleted pending promissory request ID {request_id}")
     return redirect(url_for("student.history"))
 
-
+#ACCOUNT SETUP
 @student_bp.route("/setup", methods=["GET", "POST"])
 @require_role("Student")
 def setup():
@@ -243,7 +242,7 @@ def setup():
                            student=student,
                            student_user=session.get("user_name", "Student User"))
 
-
+#VIEW REQUEST
 @student_bp.route("/view_request/<int:request_id>")
 @require_role("Student")
 def view_request(request_id):
@@ -257,7 +256,7 @@ def view_request(request_id):
     log_action(student.email, f"Viewed promissory request ID {request_id}")
     return render_template("student/view_request.html", student=student, request=req)
 
-
+#LOGOUT
 @student_bp.route("/logout")
 def logout():
     user_name = session.get("user_name", "Student User")
